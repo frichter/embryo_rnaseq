@@ -50,11 +50,11 @@ def main():
     os.chdir(fq_i.home_dir)
     fq_i.TrimAdapters()  # takes about 200 minutes
     if args.trimonly:
-        return args.fq + ' done'
+        return args.fq + ' done (trimming only!)'
     print(fq_i.r1, fq_i.r2)
-    fq_i.FastQC()
-    fq_i.RunHISAT2()
-    fq_i.RunSTAR()
+    # fq_i.FastQC()
+    # fq_i.RunHISAT2()
+    # fq_i.RunSTAR()
     return args.fq + ' done'
 
 
