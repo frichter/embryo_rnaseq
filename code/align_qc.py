@@ -45,7 +45,7 @@ star_cmd = ('time STAR --runThreadN 24 --genomeDir {} ' +
             '--readFilesIn {} {}').format(
     star_dir, fq_i.prefix + '_star', fq_i.r1, fq_i.r2)
 print(star_cmd)
-fq_i.RunSTAR()
+# fq_i.RunSTAR()
 
 """ Looping over multiple FastQ files (use this or BSUB)."""
 
@@ -91,27 +91,36 @@ module load python/3.5.0 py_packages/3.5
 
 # generating your own STAR index
 
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/grch38_star
+
+cd /sc/orga/projects/chdiTrios/Felix/dbs/grch38_ens94/
 wget ftp://ftp.ensembl.org/pub/release-94/fasta/homo_sapiens/dna/\
 Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 
 wget ftp://ftp.ensembl.org/pub/release-94/gtf/homo_sapiens/\
 Homo_sapiens.GRCh38.94.gtf.gz
 
-gunzip Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
-gunzip Homo_sapiens.GRCh38.94.gtf.gz
+time gunzip Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+time gunzip Homo_sapiens.GRCh38.94.gtf.gz
+
+
+module purge
+module load star/2.6.1d
 
 ENSEMBL_DIR="/sc/orga/projects/chdiTrios/Felix/dbs/grch38_ens94/"
 ENSEMBL_FA=$ENSEMBL_DIR"Homo_sapiens.GRCh38.dna.primary_assembly.fa"
 ENSEMBL_GTF=$ENSEMBL_DIR"Homo_sapiens.GRCh38.94.gtf"
 
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/
+
+# for sjdbOverhang ReadLength-1: got ReadLength=126 from fastq files outputs
+
 # testing STAR
-STAR --runThreadN 20 \
+time STAR --runThreadN 20 \
 --runMode genomeGenerate \
 --genomeDir grch38_star/ \
 --genomeFastaFiles $ENSEMBL_FA \
 --sjdbGTFfile $ENSEMBL_GTF \
---sjdbOverhang ReadLength-1
+--sjdbOverhang 125
 
 
 """
