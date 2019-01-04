@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """Classes to align and QC check for Embryo data.
 
 Felix Richter
@@ -63,10 +66,11 @@ class fq_pair(object):
             -p is number of cores to use
         """
         # confirm sam file isn't already made, then run hisat2
-        if not os.path.exists(self.prefix + '.sam'):
-            hisat2_cmd = ('time hisat2 --time -x %s -1 %s -2 %s -S %s.sam ' +
-                          '--un-conc %s_noPEalign -p 24') % \
-                (self.hisat2_idx, self.r1, self.r2, self.prefix, self.prefix)
+        if not os.path.exists(self.prefix + '_hisat2.sam'):
+            hisat2_cmd = ('time hisat2 --time -x {} -1 {} -2 {} -S {}.sam ' +
+                          '--un-conc {}_noPEalign -p 24').format(
+                self.hisat2_idx, self.r1, self.r2, self.prefix + '_hisat2',
+                self.prefix + '_hisat2')
             print(hisat2_cmd)
             subprocess.call(hisat2_cmd, shell=True)
         else:
@@ -102,14 +106,33 @@ class fq_pair_qc(fq_pair):
         """
         trimmed_r1 = re.sub('.fastq.gz', '_trimmed.fq.gz', self.r1)
         trimmed_r2 = re.sub('.fastq.gz', '_trimmed.fq.gz', self.r2)
+        # remove files if not completed previously
+        # if not self.check_trim_complete(self.r1):
+        #     os.remove(trimmed_r1)
+        # if not self.check_trim_complete(self.r2):
+        #     os.remove(trimmed_r2)
         if not os.path.exists(trimmed_r1):
             trim_cmd = 'time trim_galore -o {} --gzip --paired {} {}'.format(
                 self.home_dir + 'FASTQ/', self.r1, self.r2)
             print(trim_cmd)
             subprocess.call(trim_cmd, shell=True)
-            # any way to check if successful?
+            # any way to check if successful? If report is >15 lines
         self.r1 = trimmed_r1
         self.r2 = trimmed_r2
+
+    @staticmethod
+    def check_trim_complete(r_f):
+        """Check trim_galore output files."""
+        report_f = r_f + '_trimming_report.txt'
+        if os.path.exists(report_f):
+            with open(report_f, 'r') as f:
+                count = len([i for i in f])
+                if count > 15:
+                    return True
+                else:
+                    os.remove(report_f)
+                    return False
+        return True
 
     def FastQC(self):
         """Run FastQC command.
