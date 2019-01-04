@@ -32,13 +32,11 @@ from align_qc_class import fq_pair_qc
 # fq_file_loc = 'FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004'
 fq_file_loc = 'FASTQ/76448_C7_THS_025_BxE3_3_13_17_S30_L006'
 
-home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
-os.chdir(home_dir)
-
 fq_i = fq_pair_qc(
     pair_file_loc=fq_file_loc,
-    home_dir=home_dir,
+    home_dir='/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/',
     hisat2_idx='grch38_snp_tran/genome_snp_tran')
+os.chdir(fq_i.home_dir)
 fq_i.TrimAdapters()
 fq_i.FastQC()
 fq_i.RunHISAT2()

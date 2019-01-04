@@ -103,9 +103,9 @@ class fq_pair_qc(fq_pair):
         trimmed_r1 = re.sub('.fastq.gz', '_trimmed.fq.gz', self.r1)
         trimmed_r2 = re.sub('.fastq.gz', '_trimmed.fq.gz', self.r2)
         if not os.path.exists(trimmed_r1):
-            trim_cmd = 'time trim_galore --gzip --paired {} {}'.format(
-                self.r1, self.r2)
-            # print(trim_cmd)
+            trim_cmd = 'time trim_galore -o {} --gzip --paired {} {}'.format(
+                self.home_dir + 'FASTQ/', self.r1, self.r2)
+            print(trim_cmd)
             subprocess.call(trim_cmd, shell=True)
             # any way to check if successful?
         self.r1 = trimmed_r1
