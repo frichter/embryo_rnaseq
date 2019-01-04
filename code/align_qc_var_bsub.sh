@@ -3,14 +3,14 @@
 #BUSB -n 3
 #BSUB -R "rusage[mem=5000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_trim[10-12]"
+#BSUB -J "embryo_trim[1-81]"
 #BSUB -m mothra
 #BSUB -o logs/out_%J_%I.stdout
 #BSUB -e logs/err_%J_%I.stderr
 
 
 # submit with bsub < align_qc_var_bsub.sh
-# max indices either [1-81] or [1-82]
+# max indices either [1-81]
 
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
 
