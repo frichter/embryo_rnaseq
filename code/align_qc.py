@@ -52,14 +52,15 @@ def main():
     if args.trimonly:
         return args.fq + ' done (trimming only!)'
     print(fq_i.r1, fq_i.r2)
-    # fq_i.FastQC()
-    # fq_i.RunHISAT2()
-    # fq_i.RunSTAR()
+    fq_i.FastQC()
+    fq_i.RunHISAT2()
+    fq_i.RunSTAR()
     return args.fq + ' done'
 
 
 if __name__ == "__main__":
-    main()
+    done_msg = main()
+    print(done_msg)
 
 
 """Testing with a single file."""
