@@ -35,6 +35,7 @@ fq_i = fq_pair_qc(
     hisat2_idx=db_loc + 'grch38_snp_tran/genome_snp_tran')
 os.chdir(fq_i.home_dir)
 fq_i.TrimAdapters()
+print(fq_i.r1, fq_i.r2)
 fq_i.FastQC()
 fq_i.RunHISAT2()
 
@@ -125,6 +126,5 @@ time STAR --runThreadN 20 \
 --genomeFastaFiles $ENSEMBL_FA \
 --sjdbGTFfile $ENSEMBL_GTF \
 --sjdbOverhang 125
-
 
 """

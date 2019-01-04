@@ -9,27 +9,6 @@ felix.richter@icahn.mssm.edu
 Description: run alignment commands, FastQC scripts and anything else fastq
              related (e.g., maybe trimming in the future)
 
-
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ
-
-# trim_galore uses python/2.7.14 and py_packages/2.7 (loaded automatically)
-module purge
-module load trim_galore/0.4.5 fastqc/0.11.7 trimmomatic/0.36
-
-module purge
-module load python/3.5.0 py_packages/3.5
-module load fastqc/0.11.7
-module load trimmomatic/0.36
-module load hisat2/2.0.5 star/2.6.1d
-
-source ~/venv_ore/bin/activate
-
-# decompose file name into:
-96295_C1_THS_029_E9_3_15_17_S38_L008_R2_001
-
-# consider multiQC
-# Were adatpers trimmed? No!
-python
 """
 
 import re
@@ -119,9 +98,12 @@ class fq_pair_qc(fq_pair):
 
         Manual/methods:
         https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
+
+        Use the val_1 and val_2 files
+        (Source: https://www.biostars.org/p/256388/#256612)
         """
-        trimmed_r1 = re.sub('.fastq.gz', '_trimmed.fq.gz', self.r1)
-        trimmed_r2 = re.sub('.fastq.gz', '_trimmed.fq.gz', self.r2)
+        trimmed_r1 = re.sub('.fastq.gz', '_val_1.fq.gz', self.r1)
+        trimmed_r2 = re.sub('.fastq.gz', '_val_2.fq.gz', self.r2)
         # remove files if not completed previously
         # if not self.check_trim_complete(self.r1):
         #     os.remove(trimmed_r1)

@@ -13,8 +13,8 @@ Description: variant calling algorithms!
 
 """RNA cocktail options used
 
-samtools mpileup -C50 -d 100000bcftools filter
--s LowQual -e ‘%QUAL<20 —— DP>10000’
+samtools mpileup -C50 -d 100000
+bcftools filter -s LowQual -e ‘%QUAL<20 —— DP>10000’
 
 
 v3.5-0-g36282e4
