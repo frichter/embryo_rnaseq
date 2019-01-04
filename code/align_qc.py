@@ -61,6 +61,7 @@ for fq_i_file_loc in fq_file_list:
     fq_i.RunHISAT2()
     fq_i.RunSTAR()
 
+
 """
 
 """Notes for preparing
