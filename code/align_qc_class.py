@@ -115,6 +115,8 @@ class fq_pair_qc(fq_pair):
             print(trim_cmd)
             subprocess.call(trim_cmd, shell=True)
             # any way to check if successful? If report is >15 lines
+        else:
+            print(self.prefix + ' already trimmed')
         self.r1 = trimmed_r1
         self.r2 = trimmed_r2
 
