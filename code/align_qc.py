@@ -27,11 +27,12 @@ from align_qc_class import fq_pair_qc
 
 # fq_file_loc = 'FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004'
 fq_file_loc = 'FASTQ/76448_C7_THS_025_BxE3_3_13_17_S30_L006'
+db_loc = '/sc/orga/projects/chdiTrios/Felix/dbs/'
 
 fq_i = fq_pair_qc(
     pair_file_loc=fq_file_loc,
     home_dir='/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/',
-    hisat2_idx='grch38_snp_tran/genome_snp_tran')
+    hisat2_idx=db_loc + 'grch38_snp_tran/genome_snp_tran')
 os.chdir(fq_i.home_dir)
 fq_i.TrimAdapters()
 fq_i.FastQC()
@@ -84,7 +85,10 @@ time trim_galore --gzip --paired \
 
 # download HISAT2 index
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/
+
+cd /sc/orga/projects/chdiTrios/Felix/dbs/
 wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/data/grch38_snp_tran.tar.gz
+time tar -xvzf grch38_snp_tran.tar.gz
 
 module purge
 module load python/3.5.0 py_packages/3.5

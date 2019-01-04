@@ -68,7 +68,7 @@ class fq_pair(object):
         # confirm sam file isn't already made, then run hisat2
         if not os.path.exists(self.prefix + '_hisat2.sam'):
             hisat2_cmd = ('time hisat2 --time -x {} -1 {} -2 {} -S {}.sam ' +
-                          '--un-conc {}_noPEalign -p 24').format(
+                          '--dta --un-conc {}_noPEalign -p 24').format(
                 self.hisat2_idx, self.r1, self.r2, self.prefix + '_hisat2',
                 self.prefix + '_hisat2')
             print(hisat2_cmd)
@@ -84,6 +84,11 @@ class fq_pair(object):
         reads that fail to align: --un <path> --un-conc <path>
         alignment metrics: --met-file <path> --met-stderr
         readgroup IDs with --rg-id <text>
+
+        note that hisat2-build can be used for custom transcriptome
+        indices (if you want to use those instead of a genome index)
+        good examples:
+        https://bioinformatics.sciberg.com/2018/11/01/mapping-with-hisat2/
         """
 
     def RunSTAR(self):
@@ -92,7 +97,18 @@ class fq_pair(object):
         Manual:
         https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
         """
-        pass
+        if not os.path.exists(self.prefix + '_star.bam'):
+            star_dir = self.home_dir + 'grch38_star/'
+            star_cmd = ('time STAR --runThreadN 24 --genomeDir {} ' +
+                        '--readFilesCommand zcat --outFileNamePrefix {} ' +
+                        '--outSAMtype BAM SortedByCoordinate ' +
+                        '--twopassMode Basic ' +
+                        '--readFilesIn {} {}').format(
+                star_dir, self.prefix + '_star', self.r1, self.r2)
+            print(star_cmd)
+            subprocess.call(star_cmd, shell=True)
+        else:
+            print(self.prefix + '_star.bam already made')
 
 
 class fq_pair_qc(fq_pair):
@@ -148,13 +164,6 @@ class fq_pair_qc(fq_pair):
 
 
 """
-
-## what is the --dta tag? did I use this? Need this for stringtie
-
-STAR info:
-## not sure which of these:
-module load star/2.5.3a
-module load rna-star/2.4.0d
 
 # convert SAM to BAM
 time samtools view -u D1_D2_odd_repeat/D1_CTRL1.sam |
