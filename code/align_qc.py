@@ -89,12 +89,28 @@ wget ftp://ftp.ccb.jhu.edu/pub/infphilo/hisat2/data/grch38_snp_tran.tar.gz
 module purge
 module load python/3.5.0 py_packages/3.5
 
+# generating your own STAR index
+
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/grch38_star
+wget ftp://ftp.ensembl.org/pub/release-94/fasta/homo_sapiens/dna/\
+Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+
+wget ftp://ftp.ensembl.org/pub/release-94/gtf/homo_sapiens/\
+Homo_sapiens.GRCh38.94.gtf.gz
+
+gunzip Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+gunzip Homo_sapiens.GRCh38.94.gtf.gz
+
+ENSEMBL_DIR="/sc/orga/projects/chdiTrios/Felix/dbs/grch38_ens94/"
+ENSEMBL_FA=$ENSEMBL_DIR"Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+ENSEMBL_GTF=$ENSEMBL_DIR"Homo_sapiens.GRCh38.94.gtf"
+
 # testing STAR
-STAR --runThreadN 10 \
+STAR --runThreadN 20 \
 --runMode genomeGenerate \
---genomeDir /path/to/genomeDir \
---genomeFastaFiles /path/to/genome/fasta1 /path/to/genome/fasta2 ... \
---sjdbGTFfile /path/to/annotations.gtf \
+--genomeDir grch38_star/ \
+--genomeFastaFiles $ENSEMBL_FA \
+--sjdbGTFfile $ENSEMBL_GTF \
 --sjdbOverhang ReadLength-1
 
 
