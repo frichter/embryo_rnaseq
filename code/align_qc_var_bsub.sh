@@ -15,7 +15,6 @@
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
 
 let i=$LSB_JOBINDEX
-let i=10
 FQ_ID=$(tail -n+$i ../metadata/fq_prefix_list.txt | head -n1)
 
 ## For trimming (-W 4:00, -R mem=5000, -J embryo_trim_)

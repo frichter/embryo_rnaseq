@@ -113,7 +113,7 @@ class fq_pair_qc(fq_pair):
             trim_cmd = 'time trim_galore -o {} --gzip --paired {} {}'.format(
                 self.home_dir + 'FASTQ/', self.r1, self.r2)
             print(trim_cmd)
-            # subprocess.call(trim_cmd, shell=True)
+            subprocess.call(trim_cmd, shell=True)
             # any way to check if successful? If report is >15 lines
         else:
             print(self.prefix + ' already trimmed')
