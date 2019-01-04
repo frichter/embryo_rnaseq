@@ -105,8 +105,8 @@ class fq_pair_qc(fq_pair):
         if not os.path.exists(trimmed_r1):
             trim_cmd = 'time trim_galore --gzip --paired {} {}'.format(
                 self.r1, self.r2)
-            print(trim_cmd)
-            # subprocess.call(trim_cmd, shell=True)
+            # print(trim_cmd)
+            subprocess.call(trim_cmd, shell=True)
             # any way to check if successful?
         self.r1 = trimmed_r1
         self.r2 = trimmed_r2

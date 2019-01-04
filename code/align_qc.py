@@ -6,8 +6,6 @@ felix.richter@icahn.mssm.edu
 Description: run alignment commands, FastQC scripts and anything else fastq
              related (e.g., maybe trimming in the future)
 
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ
-
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
 
  # trim_galore uses python/2.7.14 and py_packages/2.7 (loaded automatically)
@@ -31,7 +29,8 @@ import os
 
 from align_qc_class import fq_pair_qc
 
-fq_file_loc = 'FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004'
+# fq_file_loc = 'FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004'
+fq_file_loc = 'FASTQ/76448_C7_THS_025_BxE3_3_13_17_S30_L006'
 
 home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
 os.chdir(home_dir)
@@ -65,6 +64,12 @@ for fq_i_file_loc in fq_file_list:
 """
 
 """Notes for preparing
+
+# after creating github locally/online, syncing with exising
+# directory on minerva:
+https://stackoverflow.com/a/29078055/10688049
+
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ
 
 # testing trim_galore
 # FastQC and trim_galore
