@@ -140,6 +140,8 @@ ENSEMBL_GTF=$ENSEMBL_DIR"Homo_sapiens.GRCh38.94.gtf"
 
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/
 
+cd /sc/orga/projects/chdiTrios/Felix/dbs/
+mkdir grch38_star
 # for sjdbOverhang ReadLength-1: got ReadLength=126 from fastq files outputs
 
 # testing STAR

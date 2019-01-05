@@ -22,6 +22,8 @@ def main():
     """Run main function to of analysis."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--trimonly', default=False, action='store_true')
+    parser.add_argument('--hisat2', default=False, action='store_true')
+    parser.add_argument('--star', default=False, action='store_true')
     parser.add_argument('--fq', type=str, help='FQ prefix')
     args = parser.parse_args()
     db_loc = '/sc/orga/projects/chdiTrios/Felix/dbs/'
@@ -34,8 +36,10 @@ def main():
     if args.trimonly:
         return args.fq + ' done (trimming only!)'
     print(fq_i.r1, fq_i.r2)
-    fq_i.RunHISAT2()
-    # fq_i.RunSTAR()
+    if args.hisat2:
+        fq_i.RunHISAT2()
+    if args.star:
+        fq_i.RunSTAR()
     fq_i.FastQC()
     return args.fq + ' done'
 
