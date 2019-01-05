@@ -38,7 +38,7 @@ python align_qc.py --hisat2 --fq $FQ_ID
 ## for HISAT2 use 20Gb as it's advertised as requiring only 3-4 Gb
 
 #################################### STAR alignment
-## Settings: -W 6:00, -R mem=35000, -J embryo_align_star
+## Settings: -W 1:00, -R mem=35000, -J embryo_align_star
 # module purge
 # module load python/3.5.0
 # module load star/2.6.1d

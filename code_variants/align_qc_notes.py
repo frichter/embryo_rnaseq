@@ -42,7 +42,7 @@ python
 import os
 import glob
 import re
-import subprocess
+# import subprocess
 
 from align_qc_class import fq_pair_qc
 
@@ -71,7 +71,7 @@ star_cmd = ('time STAR --runThreadN 24 --genomeDir {} ' +
             '--readFilesIn {} {}').format(
     fq_i.star_idx, fq_i.prefix + '_star', fq_i.r1, fq_i.r2)
 print(star_cmd)
-subprocess.call(star_cmd, shell=True)
+# subprocess.call(star_cmd, shell=True)
 # fq_i.RunSTAR()
 
 
