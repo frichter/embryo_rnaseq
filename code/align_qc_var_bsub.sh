@@ -1,7 +1,7 @@
 #BSUB -W 4:00
 #BSUB -q premium
 #BUSB -n 3
-#BSUB -R "rusage[mem=5000]"
+#BSUB -R "rusage[mem=1000]"
 #BSUB -P acc_schade01a
 #BSUB -J "embryo_trim[1-81]"
 #BSUB -m mothra

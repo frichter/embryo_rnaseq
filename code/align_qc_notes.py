@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""NOTES for align and QC check for Embryo data.
+"""NOTES for align and QC check for Embryo data, used to figure out paramters.
 
 Felix Richter
 felix.richter@icahn.mssm.edu
