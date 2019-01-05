@@ -1,7 +1,7 @@
 #BSUB -W 6:00
 #BSUB -q premium
 #BUSB -n 3
-#BSUB -R "rusage[mem=50000]"
+#BSUB -R "rusage[mem=30000]"
 #BSUB -P acc_schade01a
 #BSUB -J "embryo_align_hisat2[2-3]"
 #BSUB -m mothra
