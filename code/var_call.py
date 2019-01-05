@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""Embryo data variant calling with GATK and samtools mpileup.
+r"""Embryo data variant calling with GATK and samtools mpileup.
 
 Felix Richter
 felix.richter@icahn.mssm.edu
 1/4/2019
 Description: variant calling algorithms!
+
+env | grep -i 'gatk\|picard'
+
+module load gatk/3.6-0
+module load picard/2.7.1
+
+echo $GATK_JAR
+echo $PICARD
 
 """
 
@@ -15,8 +23,8 @@ import re
 """GATK quick start guide
 https://software.broadinstitute.org/gatk/documentation/quickstart?v=3
 java -version
-java -jar /path/to/GenomeAnalysisTK.jar -h
-java -jar $GATK -h
+java -jar $GATK_JAR -h
+java -jar $PICARD -h
 """
 
 
@@ -31,7 +39,7 @@ prefix = 'FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004_hisat2'
 id = re.sub('.*ASTQ/', '', prefix)
 
 # Add read groups, sort, mark duplicates, and create index
-rg_cmd = ('java -jar picard.jar AddOrReplaceReadGroups I={} ' +
+rg_cmd = ('java -jar $PICARD AddOrReplaceReadGroups I={} ' +
           'O={} SO=coordinate RGID=id RGLB=nextera ' +
           'RGPL=ilmn RGPU=machine RGSM={}').format(
     prefix + '.sam', prefix + '_rg_sorted.bam', id)
@@ -39,7 +47,7 @@ print(rg_cmd)
 # subprocess.call(rg_cmd, shell=True)
 # mark MarkDuplicates docs:
 # https://software.broadinstitute.org/gatk/documentation/tooldocs/4.0.4.0/picard_sam_markduplicates_MarkDuplicates.php
-dup_cmd = ('java -jar picard.jar MarkDuplicates I={} ' +
+dup_cmd = ('java -jar $PICARD MarkDuplicates I={} ' +
            'O={}_dedupped.bam CREATE_INDEX=true ' +
            'VALIDATION_STRINGENCY=SILENT ' +
            'M={}.metrics').format(
@@ -49,7 +57,7 @@ print(dup_cmd)
 
 # Split'N'Trim and reassign mapping qualities
 ref_fa = 'ref.fasta'
-split_cmd = ('java -jar GenomeAnalysisTK.jar -T SplitNCigarReads -R {} ' +
+split_cmd = ('java -jar $GATK_JAR -T SplitNCigarReads -R {} ' +
              '-I {}_dedupped.bam -o {}_split.bam -rf ' +
              'ReassignOneMappingQuality -RMQF 255 -RMQT 60 ' +
              '-U ALLOW_N_CIGAR_READS').format(
@@ -62,7 +70,7 @@ print(split_cmd)
 # 5. Base Recalibration
 
 # 6. Variant calling
-hc_cmd = ('java -jar GenomeAnalysisTK.jar -T HaplotypeCaller -R {}' +
+hc_cmd = ('java -jar $GATK_JAR -T HaplotypeCaller -R {}' +
           '-I {}_split.bam -dontUseSoftClippedBases -stand_call_conf 20.0' +
           '-o {}_gatk3.vcf').format(
     ref_fa, prefix, prefix)
@@ -70,7 +78,7 @@ print(hc_cmd)
 # subprocess.call(hc_cmd, shell=True)
 
 # 7. Variant filtering
-filter_cmd = ('java -jar GenomeAnalysisTK.jar -T VariantFiltration ' +
+filter_cmd = ('java -jar $GATK_JAR -T VariantFiltration ' +
               '-R {} -V {}_gatk3.vcf -window 35 -cluster 3 ' +
               '-filterName FS -filter "FS > 30.0" -filterName QD ' +
               '-filter "QD < 2.0" -o {}_gatk3_filtered.vcf ').format(
