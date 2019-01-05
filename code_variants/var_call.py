@@ -8,6 +8,7 @@ felix.richter@icahn.mssm.edu
 1/4/2019
 Description: variant calling algorithms!
 
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 module load gatk/3.6-0
 module load picard/2.7.1
 module load python/3.5.0 py_packages/3.5

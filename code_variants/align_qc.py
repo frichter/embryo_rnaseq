@@ -30,7 +30,8 @@ def main():
     fq_i = fq_pair_qc(
         pair_file_loc=args.fq,
         home_dir='/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/',
-        hisat2_idx=db_loc + 'grch38_snp_tran/genome_snp_tran')
+        hisat2_idx=db_loc + 'grch38_snp_tran/genome_snp_tran',
+        star_idx=db_loc + 'grch38_star/')
     os.chdir(fq_i.home_dir)
     fq_i.TrimAdapters()  # takes about 200 minutes
     if args.trimonly:

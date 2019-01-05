@@ -13,7 +13,7 @@ Description: run alignment commands, FastQC scripts and anything else fastq
 # trim_galore uses python/2.7.14 and py_packages/2.7 (loaded automatically)
 
 # For running trim_galore
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 module purge
 module load trim_galore/0.4.5
 
@@ -22,14 +22,14 @@ python align_qc.py --trimonly --fq FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ
 
 # For Hisat2
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 module purge
 module load fastqc/0.11.7
 module load hisat2/2.0.5
 module load python/3.5.0 py_packages/3.5
 
 # For running STAR
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 module purge
 module load python/3.5.0
 module load star/2.6.1d

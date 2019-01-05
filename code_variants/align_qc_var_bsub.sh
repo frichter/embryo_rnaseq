@@ -9,7 +9,7 @@
 #BSUB -e logs/err_%J_%I.stderr
 
 
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 
 # submit with 
 # bsub < align_qc_var_bsub.sh
