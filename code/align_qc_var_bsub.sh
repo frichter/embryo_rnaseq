@@ -3,7 +3,7 @@
 #BUSB -n 3
 #BSUB -R "rusage[mem=1000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_trim[1-81]"
+#BSUB -J "embryo_trim[10-12]"
 #BSUB -m mothra
 #BSUB -o logs/out_%J_%I.stdout
 #BSUB -e logs/err_%J_%I.stderr

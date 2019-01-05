@@ -110,7 +110,8 @@ class fq_pair_qc(fq_pair):
         # if not self.check_trim_complete(self.r2):
         #     os.remove(trimmed_r2)
         if not os.path.exists(trimmed_r1):
-            trim_cmd = 'time trim_galore -o {} --gzip --paired {} {}'.format(
+            trim_cmd = ('time trim_galore -o {} --gzip ' +
+                        '--quality 0 --paired {} {}').format(
                 self.home_dir + 'FASTQ/', self.r1, self.r2)
             print(trim_cmd)
             subprocess.call(trim_cmd, shell=True)
