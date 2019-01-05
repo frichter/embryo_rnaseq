@@ -34,9 +34,9 @@ def main():
     if args.trimonly:
         return args.fq + ' done (trimming only!)'
     print(fq_i.r1, fq_i.r2)
-    fq_i.FastQC()
     fq_i.RunHISAT2()
-    fq_i.RunSTAR()
+    # fq_i.RunSTAR()
+    fq_i.FastQC()
     return args.fq + ' done'
 
 

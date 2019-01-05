@@ -47,9 +47,10 @@ class fq_pair(object):
         # confirm sam file isn't already made, then run hisat2
         if not os.path.exists(self.prefix + '_hisat2.sam'):
             hisat2_cmd = ('time hisat2 --time -x {} -1 {} -2 {} -S {}.sam ' +
+                          '--met-file {}_metrics.txt ' +
                           '--dta --un-conc {}_noPEalign -p 24').format(
                 self.hisat2_idx, self.r1, self.r2, self.prefix + '_hisat2',
-                self.prefix + '_hisat2')
+                self.prefix + '_hisat2', self.prefix + '_hisat2')
             print(hisat2_cmd)
             subprocess.call(hisat2_cmd, shell=True)
         else:
@@ -101,6 +102,9 @@ class fq_pair_qc(fq_pair):
 
         Use the val_1 and val_2 files
         (Source: https://www.biostars.org/p/256388/#256612)
+
+        Checking ASCII scores:
+        https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/QualityScoreEncoding_swBS.htm
         """
         trimmed_r1 = re.sub('.fastq.gz', '_val_1.fq.gz', self.r1)
         trimmed_r2 = re.sub('.fastq.gz', '_val_2.fq.gz', self.r2)
@@ -120,20 +124,6 @@ class fq_pair_qc(fq_pair):
             print(self.prefix + ' already trimmed')
         self.r1 = trimmed_r1
         self.r2 = trimmed_r2
-
-    @staticmethod
-    def check_trim_complete(r_f):
-        """Check trim_galore output files."""
-        report_f = r_f + '_trimming_report.txt'
-        if os.path.exists(report_f):
-            with open(report_f, 'r') as f:
-                count = len([i for i in f])
-                if count > 15:
-                    return True
-                else:
-                    os.remove(report_f)
-                    return False
-        return True
 
     def FastQC(self):
         """Run FastQC command.

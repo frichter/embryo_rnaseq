@@ -1,34 +1,34 @@
-#BSUB -W 4:00
+#BSUB -W 6:00
 #BSUB -q premium
 #BUSB -n 3
-#BSUB -R "rusage[mem=1000]"
+#BSUB -R "rusage[mem=50000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_trim[1-81]"
+#BSUB -J "embryo_align_hisat2[2-3]"
 #BSUB -m mothra
 #BSUB -o logs/out_%J_%I.stdout
 #BSUB -e logs/err_%J_%I.stderr
 
 
 # submit with bsub < align_qc_var_bsub.sh
-# max indices either [1-81]
+# max indices [1-81]
 
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code
 
 let i=$LSB_JOBINDEX
 FQ_ID=$(tail -n+$i ../metadata/fq_prefix_list.txt | head -n1)
 
-## For trimming (-W 4:00, -R mem=5000, -J embryo_trim_)
-module purge
-module load trim_galore/0.4.5
-python align_qc.py --trimonly --fq $FQ_ID
+## For trimming (-W 4:00, -R mem=1000, -J embryo_trim)
+# module purge
+# module load trim_galore/0.4.5
+# python align_qc.py --trimonly --fq $FQ_ID
 
 ## For once trimming is done
-## (-W :00, -R mem=50000, -J embryo_align_)
-# module purge
-# module load fastqc/0.11.7
-# module load hisat2/2.0.5 star/2.6.1d
-# module load python/3.5.0 py_packages/3.5
-# python align_qc.py --fq $FQ_ID
+## (-W 6:00, -R mem=50000, -J embryo_align_hisat2)
+module purge
+module load fastqc/0.11.7
+module load hisat2/2.0.5 star/2.6.1d
+module load python/3.5.0 py_packages/3.5
+python align_qc.py --fq $FQ_ID
 
 ## for variant calling
 # python var_call.py --fq $FQ_ID
