@@ -19,7 +19,7 @@ import os
 class fq_pair(object):
     """Create a FastQ pair object."""
 
-    def __init__(self, pair_file_loc, home_dir, hisat2_idx):
+    def __init__(self, pair_file_loc, home_dir, hisat2_idx, star_idx):
         """Create an object for the FASTQ file."""
         # assign the filenames to the instance
         self.pair_file_loc = pair_file_loc
@@ -35,6 +35,8 @@ class fq_pair(object):
         self.home_dir = home_dir
         # hisat2 index
         self.hisat2_idx = hisat2_idx
+        # STAR aligner index
+        self.star_idx = star_idx
 
     def RunHISAT2(self):
         """Run HISAT2.
@@ -78,13 +80,12 @@ class fq_pair(object):
         https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
         """
         if not os.path.exists(self.prefix + '_star.bam'):
-            star_dir = self.home_dir + 'grch38_star/'
             star_cmd = ('time STAR --runThreadN 24 --genomeDir {} ' +
                         '--readFilesCommand zcat --outFileNamePrefix {} ' +
                         '--outSAMtype BAM SortedByCoordinate ' +
                         '--twopassMode Basic ' +
                         '--readFilesIn {} {}').format(
-                star_dir, self.prefix + '_star', self.r1, self.r2)
+                self.star_idx, self.prefix + '_star', self.r1, self.r2)
             print(star_cmd)
             subprocess.call(star_cmd, shell=True)
         else:
