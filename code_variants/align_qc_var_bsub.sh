@@ -3,7 +3,7 @@
 #BUSB -n 20
 #BSUB -R "rusage[mem=10000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_align_hisat2[1-10]"
+#BSUB -J "embryo_align_hisat2[11-81]"
 #BSUB -m mothra
 #BSUB -o logs/out_%J_%I.stdout
 #BSUB -e logs/err_%J_%I.stderr
