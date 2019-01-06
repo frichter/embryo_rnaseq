@@ -119,9 +119,10 @@ class bam_gatk(object):
             print(filter_cmd)
             subprocess.call(filter_cmd, shell=True)
 
-    def run_bqsr(self):
-        """Run all the BQSR commands."""
-        
+    # def run_bqsr(self):
+    #     """Run all the BQSR commands."""
+    #
+
 
 """Running Samtools
 
