@@ -14,14 +14,6 @@ import re
 import subprocess
 import os
 
-"""Running GATK3 RNAseq variant calling
-https://software.broadinstitute.org/gatk/documentation/article.php?id=3891
-
-Running GATK4
-https://github.com/gatk-workflows/gatk3-4-rnaseq-germline-snps-indels
-
-"""
-
 
 class bam_gatk(object):
     """Create an object and functions for GATK variant calling from a BAM."""

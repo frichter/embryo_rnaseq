@@ -13,6 +13,13 @@ https://github.com/bioinform/rnacocktail/blob/master/src/run_variant.py
 
 review all options here:
 https://bioinform.github.io/rnacocktail/
+
+Running GATK3 RNAseq variant calling
+https://software.broadinstitute.org/gatk/documentation/article.php?id=3891
+
+Running GATK4
+https://github.com/gatk-workflows/gatk3-4-rnaseq-germline-snps-indels
+
 """
 
 """GATK quick start guide

@@ -24,12 +24,23 @@ home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
 file_prefix = home_dir + 'FASTQ/95724_C1_THS_024_BxE2_3_13_17_S20_L004'
 os.chdir(home_dir)
 bam_i = bam_gatk(file_prefix, home_dir, aligner='hisat2')
-bam_i.run_picard_rg()
+bam_i.run_picard_rg()  # 12m
 bam_i.run_picard_md()
+bam_i.run_gatk_split_trim()
 # Indel Realignment (optional): not doing indels currently
 bam_i.run_bqsr()
 bam_i.run_gatk_hc()
 bam_i.run_gatk_var_filter()
+
+"""Future GATK directions (move to gatk_call_notes.py when implementing):
+
+- Consider parallelism or other methods of speeding up
+https://gatkforums.broadinstitute.org/gatk/discussion/1975/how-can-i-use-parallelism-to-make-gatk-tools-run-faster
+- Consider adding in the -Xmx and -Xms options
+- Consider other HaplotypeCaller arguments (e.g., -maxAltAlleles)
+https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
+
+"""
 
 #
 
