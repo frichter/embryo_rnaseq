@@ -17,6 +17,7 @@ python
 """
 
 import os
+import argparse
 
 from var_call_class import bam_gatk
 
@@ -40,8 +41,31 @@ https://gatkforums.broadinstitute.org/gatk/discussion/1975/how-can-i-use-paralle
 - Consider adding in the -Xmx and -Xms options
 - Consider other HaplotypeCaller arguments (e.g., -maxAltAlleles)
 https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
-
 """
+
+
+def main():
+    """Run GATK."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--aligner', choices=["star", "hisat2"], default=None)
+    parser.add_argument('--bam', type=str, help='BAM prefix')
+    args = parser.parse_args()
+    home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
+    os.chdir(home_dir)
+    bam_i = bam_gatk(args.bam, home_dir, aligner=args.aligner)
+    bam_i.run_picard_rg()  # 12m
+    bam_i.run_picard_md()  # also 12m
+    bam_i.run_gatk_split_trim()
+    # Indel Realignment (optional): not doing indels currently
+    bam_i.run_bqsr()
+    bam_i.run_gatk_hc()
+    bam_i.run_gatk_var_filter()
+    return 'GATK done for ' + args.bam
+
+
+if __name__ == "__main__":
+    done_msg = main()
+    print(done_msg)
 
 #
 

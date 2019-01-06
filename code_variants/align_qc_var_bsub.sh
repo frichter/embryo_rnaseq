@@ -44,4 +44,9 @@ python align_qc.py --hisat2 --fq $FQ_ID
 
 #################################### Variant calling
 ## Settings: -W 6:00, -R mem=35000, -J embryo_var_gatk
-# python var_call.py --fq $FQ_ID
+# module purge
+# module load gatk/3.6-0
+# module load picard/2.7.1
+# module load python/3.5.0 py_packages/3.5
+# python var_call.py --aligner "hisat2" --bam $FQ_ID
+# python var_call.py --aligner "star" --bam $FQ_ID
