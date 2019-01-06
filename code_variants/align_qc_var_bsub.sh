@@ -16,14 +16,14 @@ cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 # max indices [1-81]
 
 let i=$LSB_JOBINDEX
-FQ_ID=$(tail -n+$i ../metadata/fq_prefix_list.txt | head -n1)
-echo $FQ_ID
+ID=$(tail -n+$i ../metadata/fq_prefix_list.txt | head -n1)
+echo $ID
 
 #################################### Trimming
 ## Settings: -W 4:00, -R mem=1000, -J embryo_trim)
 # module purge
 # module load trim_galore/0.4.5
-# python align_qc.py --trimonly --fq $FQ_ID
+# python align_qc.py --trimonly --fq $ID
 
 
 #################################### HISAT2 alignment
@@ -32,7 +32,7 @@ module purge
 module load fastqc/0.11.7
 module load hisat2/2.0.5
 module load python/3.5.0 py_packages/3.5
-python align_qc.py --hisat2 --fq $FQ_ID
+python align_qc.py --hisat2 --fq $ID
 ## HISAT2 is advertised as requiring only 3-4 Gb
 
 #################################### STAR alignment
@@ -40,7 +40,7 @@ python align_qc.py --hisat2 --fq $FQ_ID
 # module purge
 # module load python/3.5.0
 # module load star/2.6.1d
-# python align_qc.py --star --fq $FQ_ID
+# python align_qc.py --star --fq $ID
 
 #################################### Variant calling
 ## Settings: -W 6:00, -R mem=35000, -J embryo_var_gatk
@@ -48,5 +48,5 @@ python align_qc.py --hisat2 --fq $FQ_ID
 # module load gatk/3.6-0
 # module load picard/2.7.1
 # module load python/3.5.0 py_packages/3.5
-# python var_call.py --aligner "hisat2" --bam $FQ_ID
-# python var_call.py --aligner "star" --bam $FQ_ID
+# python var_call.py --aligner "hisat2" --bam $ID
+# python var_call.py --aligner "star" --bam $ID
