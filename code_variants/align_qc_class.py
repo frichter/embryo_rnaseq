@@ -132,11 +132,15 @@ class fq_pair_qc(fq_pair):
         Manual:
         https://www.bioinformatics.babraham.ac.uk/projects/download.html#fastqc
         """
-        fastqc_cmd = 'time fastqc %s'
-        print('running fastqc for %s' % self.r1)
-        subprocess.call(fastqc_cmd % self.r1, shell=True)
-        print('running fastqc for %s' % self.r2)
-        subprocess.call(fastqc_cmd % self.r2, shell=True)
+        out_f = re.sub('.fq.gz|.fastq.gz', '_fastqc.html', self.r1)
+        if not os.path.exists(out_f):
+            fastqc_cmd = 'time fastqc %s'
+            print('running fastqc for %s' % self.r1)
+            subprocess.call(fastqc_cmd % self.r1, shell=True)
+            print('running fastqc for %s' % self.r2)
+            subprocess.call(fastqc_cmd % self.r2, shell=True)
+        else:
+            print('fastqc plots already made for', self.r1)
 
 
 """

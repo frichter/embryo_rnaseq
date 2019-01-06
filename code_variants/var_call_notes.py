@@ -238,10 +238,10 @@ ref_gatk_dir = '/sc/orga/projects/chdiTrios/Felix/dbs/gatk_resources/'
 bqsr_mk_tbl_cmd = (
     'time java -jar $GATK_JAR -T BaseRecalibrator ' +
     '-R {} -I {} -knownSites {} -knownSites {} -o {}').format(
-    ref_gatk_dir + 'Homo_sapiens_grch38.fasta',
+    ref_fa,
     prefix + '_split.bam',
-    ref_gatk_dir + 'dbsnp_146.hg38.vcf.gz',
-    ref_gatk_dir + 'Mills_and_1000G_gold_standard.indels.hg38.vcf.gz',
+    ref_gatk_dir + 'dbsnp_146.grch38.sorted.vcf',
+    ref_gatk_dir + 'Mills_and_1000G_gold_standard.indels.grch38.sorted.vcf',
     prefix + '.recal_data.table')
 print(bqsr_mk_tbl_cmd)
 subprocess.call(bqsr_mk_tbl_cmd, shell=True)
@@ -251,10 +251,10 @@ bqsr_mk_tbl_p2_cmd = (
     'time java -jar $GATK_JAR -T BaseRecalibrator ' +
     '-R {} -I {} -knownSites {} -knownSites {} ' +
     '-BQSR {} -o {}').format(
-    ref_gatk_dir + 'Homo_sapiens_assembly38.fasta',
+    ref_fa,
     prefix + '_split.bam',
-    ref_gatk_dir + 'dbsnp_146.hg38.vcf.gz',
-    ref_gatk_dir + 'Mills_and_1000G_gold_standard.indels.hg38.vcf.gz',
+    ref_gatk_dir + 'dbsnp_146.grch38.sorted.vcf',
+    ref_gatk_dir + 'Mills_and_1000G_gold_standard.indels.grch38.sorted.vcf',
     prefix + '.recal_data.table',
     prefix + '.recal_data_pass2.table')
 print(bqsr_mk_tbl_p2_cmd)
@@ -268,11 +268,11 @@ java -jar GenomeAnalysisTK.jar \
     -after post_recal_data.table \
     -plots recalibration_plots.pdf
 """
-bqsr_cmd = ('time java -jar $GATK_JAR -T PrintReads ' +
-            '-R {} -I {} -BQSR {}_bqsr.grp -o {}').format(
-    ref_fa, prefix + '_split.bam', prefix, prefix + '_bqsr.bam')
-print(bqsr_cmd)
-subprocess.call(bqsr_cmd, shell=True)
+# bqsr_cmd = ('time java -jar $GATK_JAR -T PrintReads ' +
+#             '-R {} -I {} -BQSR {}_bqsr.grp -o {}').format(
+#     ref_fa, prefix + '_split.bam', prefix, prefix + '_bqsr.bam')
+# print(bqsr_cmd)
+# subprocess.call(bqsr_cmd, shell=True)
 
 """4. Apply the recalibration to your sequence data
 java -jar GenomeAnalysisTK.jar \
@@ -284,17 +284,21 @@ java -jar GenomeAnalysisTK.jar \
     -o recal_reads.bam
 """
 bqsr_cmd = ('time java -jar $GATK_JAR -T PrintReads ' +
-            '-R {} -I {} -BQSR {}_bqsr.grp -o {}').format(
-    ref_fa, prefix + '_split.bam', prefix, prefix + '_bqsr.bam')
+            '-R {} -I {} -BQSR {} -o {}').format(
+    ref_fa, prefix + '_split.bam',
+    prefix + '.recal_data_pass2.table',
+    prefix + '_bqsr.bam')
 print(bqsr_cmd)
 subprocess.call(bqsr_cmd, shell=True)
 # 6. Variant calling
 hc_cmd = ('time java -jar $GATK_JAR -T HaplotypeCaller -R {} ' +
           '-I {}_split.bam -dontUseSoftClippedBases -stand_call_conf 20.0 ' +
-          # '-dbsnp ' +
+          '-dbsnp {} ' +
           # dbsnp uses known sites for variant annotation
           '-o {}_gatk3.vcf').format(
-    ref_fa, prefix, prefix)
+    ref_fa, prefix,
+    ref_gatk_dir + 'dbsnp_146.grch38.sorted.vcf',
+    prefix)
 print(hc_cmd)
 subprocess.call(hc_cmd, shell=True)
 # 7. Variant filtering
