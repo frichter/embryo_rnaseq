@@ -128,9 +128,16 @@ class bam_gatk(object):
                 self.prefix + '.recal_data_pass2.table')
             print(bqsr_mk_tbl_p2_cmd)
             subprocess.call(bqsr_mk_tbl_p2_cmd, shell=True)
-            # Indel Realignment (optional): not doing indels anyway
-            # 5. Base Recalibration. Docs:
-            # https://software.broadinstitute.org/gatk/documentation/article?id=44
+            """3. Generate before/after plots (skipping).
+            java -jar GenomeAnalysisTK.jar \
+                -T AnalyzeCovariates \
+                -R reference.fa \
+                -L 20 \
+                -before recal_data.table \
+                -after post_recal_data.table \
+                -plots recalibration_plots.pdf
+            """
+            """4. Apply the recalibration to your sequence data."""
             bqsr_cmd = ('time java -Djava.io.tmpdir={} ' +
                         '-jar $GATK_JAR -T PrintReads ' +
                         '-R {} -I {} -BQSR {} -o {}').format(

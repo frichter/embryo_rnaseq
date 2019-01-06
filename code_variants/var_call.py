@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-r"""Embryo data variant calling with GATK and samtools mpileup.
+"""Embryo data variant calling with GATK and samtools mpileup.
 
 Felix Richter
 felix.richter@icahn.mssm.edu
