@@ -60,6 +60,13 @@ class bam_gatk(object):
         self.vcf_nofilter = self.prefix + '_gatk3_nofilter.vcf'
         self.vcf = self.prefix + '_gatk3.vcf'
 
+    def clean_known_sites(self):
+        """Delete the automatically made index for knownsites."""
+        if os.path.exists(self.ks_dbsnp + '.idx'):
+            os.remove(self.ks_dbsnp + '.idx')
+        if os.path.exists(self.ks_indels + '.idx'):
+            os.remove(self.ks_indels + '.idx')
+
     def run_picard_rg(self):
         """Run PICARD read group commands."""
         # Add read groups, sort, mark duplicates, and create index
@@ -103,6 +110,7 @@ class bam_gatk(object):
         """Run all the BQSR commands."""
         """1. Analyze patterns of covariation in the sequence dataset."""
         if not os.path.exists(self.bqsr_bam):
+            self.clean_known_sites()
             bqsr_mk_tbl_cmd = (
                 'time java  -Djava.io.tmpdir={} ' +
                 '-jar $GATK_JAR -T BaseRecalibrator ' +
@@ -116,6 +124,7 @@ class bam_gatk(object):
             """2. Do a second pass to analyze covariation
             remaining after recalibration
             """
+            self.clean_known_sites()
             bqsr_mk_tbl_p2_cmd = (
                 'time java  -Djava.io.tmpdir={} ' +
                 '-jar $GATK_JAR -T BaseRecalibrator ' +
@@ -149,6 +158,7 @@ class bam_gatk(object):
     def run_gatk_hc(self):
         """Run GATK3 commands for variant calling."""
         if not os.path.exists(self.vcf_nofilter):
+            self.clean_known_sites()
             hc_cmd = ('time java -Djava.io.tmpdir={} ' +
                       '-jar $GATK_JAR -T HaplotypeCaller -R {} ' +
                       '-I {} -dontUseSoftClippedBases ' +
