@@ -45,6 +45,7 @@ class bam_gatk(object):
     def init_file_names(self):
         """Initialize file names for intermediate and final GATK steps."""
         self.in_sam = self.prefix + '.sam'
+        self.clean_sam = self.prefix + '_clean.bam'
         self.sorted_bam = self.prefix + '_rg_sorted.bam'
         self.dedup_bam = self.prefix + '_dedupped.bam'
         self.split_trim_bam = self.prefix + '_split.bam'
@@ -59,6 +60,15 @@ class bam_gatk(object):
         if os.path.exists(self.ks_indels + '.idx'):
             os.remove(self.ks_indels + '.idx')
 
+    def run_picard_cs(self):
+        """Run Picard clean sam command (used in RNAcocktail)."""
+        if not os.path.exists(self.clean_sam):
+            rg_cmd = ('time java -Djava.io.tmpdir={} ' +
+                      '-jar $PICARD CleanSam I={} O={}').format(
+                self.tmp_dir, self.in_sam, self.clean_sam)
+            print(rg_cmd)
+            subprocess.call(rg_cmd, shell=True)
+
     def run_picard_rg(self):
         """Run PICARD read group commands."""
         # Add read groups, sort, mark duplicates, and create index
@@ -67,7 +77,10 @@ class bam_gatk(object):
                       '-jar $PICARD AddOrReplaceReadGroups I={} ' +
                       'O={} SO=coordinate RGID=FelixRichter RGLB=Nextera ' +
                       'RGPL=ILLUMINA RGPU=machine RGSM={}').format(
-                self.tmp_dir, self.in_sam, self.sorted_bam, self.id)
+                self.tmp_dir,
+                # use clean_sam if using run_picard_cs, otherwise in_sam:
+                self.in_sam,
+                self.sorted_bam, self.id)
             print(rg_cmd)
             subprocess.call(rg_cmd, shell=True)
         # time 60 mins
