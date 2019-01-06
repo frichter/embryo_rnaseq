@@ -54,4 +54,6 @@ for star_log in star_log_iter:
 # number of files deleted:
 print(count)
 
+"""GATK output check."""
+
 #
