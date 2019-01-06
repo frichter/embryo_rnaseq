@@ -50,7 +50,7 @@ class fq_pair(object):
         if not os.path.exists(self.prefix + '_hisat2.sam'):
             hisat2_cmd = ('time hisat2 --time -x {} -1 {} -2 {} -S {}.sam ' +
                           '--met-file {}_metrics.txt ' +
-                          '--dta --un-conc {}_noPEalign -p 24').format(
+                          '--dta --un-conc {}_noPEalign -p 40').format(
                 self.hisat2_idx, self.r1, self.r2, self.prefix + '_hisat2',
                 self.prefix + '_hisat2', self.prefix + '_hisat2')
             print(hisat2_cmd)
@@ -79,7 +79,8 @@ class fq_pair(object):
         Manual:
         https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
         """
-        if not os.path.exists(self.prefix + '_star.bam'):
+        out_bam = self.prefix + '_starAligned.sortedByCoord.out.bam'
+        if not os.path.exists(out_bam):
             star_cmd = ('time STAR --runThreadN 24 --genomeDir {} ' +
                         '--readFilesCommand zcat --outFileNamePrefix {} ' +
                         '--outSAMtype BAM SortedByCoordinate ' +
@@ -89,7 +90,7 @@ class fq_pair(object):
             print(star_cmd)
             subprocess.call(star_cmd, shell=True)
         else:
-            print(self.prefix + '_star.bam already made')
+            print(self.prefix + ' STAR alignment already done')
 
 
 class fq_pair_qc(fq_pair):

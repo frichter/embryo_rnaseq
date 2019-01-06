@@ -1,10 +1,10 @@
-#BSUB -W 12:00
+#BSUB -W 22:00
 #BSUB -q premium
-#BUSB -n 20
+#BUSB -n 30
 #BSUB -R "rusage[mem=10000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_align_hisat2[11-81]"
-#BSUB -m mothra
+#BSUB -J "embryo_align_hisat2[1-81]"
+#BSUB -m manda
 #BSUB -o logs/out_%J_%I.stdout
 #BSUB -e logs/err_%J_%I.stderr
 
@@ -27,7 +27,7 @@ echo $FQ_ID
 
 
 #################################### HISAT2 alignment
-## Settings: (-W 6:00, -R mem=20000, -J embryo_align_hisat2
+## Settings: (-W 12:00, -R mem=10000, -J embryo_align_hisat2
 module purge
 module load fastqc/0.11.7
 module load hisat2/2.0.5

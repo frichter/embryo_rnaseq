@@ -175,6 +175,7 @@ with gzip.open(f, 'r') as f_in, open(f_out_loc, 'w') as f_out:
         count += 1
         if count % 10000 == 0:
             # print(count/1275224) # for Mills_and_1000G_gold_standard
+            # 149125263 for dbsnp 146
             print(count)
 
 print(count)
@@ -188,6 +189,7 @@ ENSEMBL_FA=$ENSEMBL_DIR"Homo_sapiens.GRCh38.dna.primary_assembly.fa"
 GATK_DICT=$ENSEMBL_DIR"Homo_sapiens.GRCh38.dna.primary_assembly.dict"
 
 cd /sc/orga/projects/chdiTrios/Felix/dbs/gatk_resources
+
 time java -jar $PICARD SortVcf \
     I=Mills_and_1000G_gold_standard.indels.grch38.vcf \
     O=Mills_and_1000G_gold_standard.indels.grch38.sorted.vcf \
