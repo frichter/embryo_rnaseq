@@ -102,20 +102,6 @@ with open('metadata/fq_prefix_list.txt', 'w') as out_f:
         _ = out_f.write(i + '\n')
 
 
-# hisat2 output check
-home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
-hs_met_iter = glob.iglob(home_dir + 'FASTQ/*hisat2_metrics.txt')
-count = 0
-for hs_met in hs_met_iter:
-    if os.stat(hs_met).st_size == 0:
-        hs_f_iter = glob.iglob(re.sub('_metrics.txt', '*', hs_met))
-        for hs_f in hs_f_iter:
-            print('deleting unfinishing alignment for ' + hs_f)
-            os.remove(hs_f)
-            count += 1
-
-print(count)
-
 for fq_i_file_loc in fq_file_list:
     # print(fq_i_file_loc)
     fq_i = fq_pair_qc(

@@ -11,8 +11,6 @@ Description: run alignment commands, FastQC scripts and anything else fastq
 """
 
 import os
-# import glob
-# import re
 import argparse
 
 from align_qc_class import fq_pair_qc

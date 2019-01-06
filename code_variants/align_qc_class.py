@@ -81,7 +81,7 @@ class fq_pair(object):
         """
         out_bam = self.prefix + '_starAligned.sortedByCoord.out.bam'
         if not os.path.exists(out_bam):
-            star_cmd = ('time STAR --runThreadN 24 --genomeDir {} ' +
+            star_cmd = ('time STAR --runThreadN 40 --genomeDir {} ' +
                         '--readFilesCommand zcat --outFileNamePrefix {} ' +
                         '--outSAMtype BAM SortedByCoordinate ' +
                         '--twopassMode Basic ' +

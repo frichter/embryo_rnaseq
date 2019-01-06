@@ -200,6 +200,26 @@ time java -jar $PICARD SortVcf \
     O=dbsnp_146.grch38.sorted.vcf \
     SEQUENCE_DICTIONARY=$GATK_DICT
 
+real    87m30.823s
+user    212m42.771s
+
+BQSR gives this error:
+##### ERROR MESSAGE: Input files knownSites and reference
+have incompatible contigs.
+
+# actually was a problem with the idx file so I deleted that
+
+# removing the contig=<ID= lines
+f = 'Mills_and_1000G_gold_standard.indels.grch38.sorted.vcf'
+f_out_loc = re.sub('sorted', 'sorted_noassemb', f)
+with open(f, 'r') as f_in, open(f_out_loc, 'w') as f_out:
+    for line in f_in:
+        line = str(line, 'utf-8')
+        # exclude line if it has assembly information
+        if 'contig=<ID=' in line:
+            continue
+        _ = f_out.write(line)
+
 Soooo many bugs in GATK. That I think could be fixed very easily
 and make the software soooo much more robust
 
@@ -293,13 +313,15 @@ bqsr_cmd = ('time java -jar $GATK_JAR -T PrintReads ' +
 print(bqsr_cmd)
 subprocess.call(bqsr_cmd, shell=True)
 # 6. Variant calling
-hc_cmd = ('time java -jar $GATK_JAR -T HaplotypeCaller -R {} ' +
+tmp_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/tmp_dir/'
+hc_cmd = ('time java -Djava.io.tmpdir={} -jar $GATK_JAR ' +
+          '-T HaplotypeCaller -R {} ' +
           '-I {}_split.bam -dontUseSoftClippedBases -stand_call_conf 20.0 ' +
-          '-dbsnp {} ' +
+          # '-dbsnp {} ' +
           # dbsnp uses known sites for variant annotation
           '-o {}_gatk3.vcf').format(
-    ref_fa, prefix,
-    ref_gatk_dir + 'dbsnp_146.grch38.sorted.vcf',
+    tmp_dir, ref_fa, prefix,
+    # ref_gatk_dir + 'dbsnp_146.grch38.sorted.vcf',
     prefix)
 print(hc_cmd)
 subprocess.call(hc_cmd, shell=True)
