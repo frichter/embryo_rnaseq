@@ -317,11 +317,11 @@ tmp_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/tmp_dir/'
 hc_cmd = ('time java -Djava.io.tmpdir={} -jar $GATK_JAR ' +
           '-T HaplotypeCaller -R {} ' +
           '-I {}_split.bam -dontUseSoftClippedBases -stand_call_conf 20.0 ' +
-          # '-dbsnp {} ' +
+          '-dbsnp {} ' +
           # dbsnp uses known sites for variant annotation
           '-o {}_gatk3.vcf').format(
     tmp_dir, ref_fa, prefix,
-    # ref_gatk_dir + 'dbsnp_146.grch38.sorted.vcf',
+    ref_gatk_dir + 'dbsnp_146.grch38.sorted.vcf',
     prefix)
 print(hc_cmd)
 subprocess.call(hc_cmd, shell=True)
