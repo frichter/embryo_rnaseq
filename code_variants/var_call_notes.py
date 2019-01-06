@@ -7,6 +7,14 @@ import re
 import subprocess
 import os
 
+"""Other variant calling pipelines:
+rnacocktail
+https://github.com/bioinform/rnacocktail/blob/master/src/run_variant.py
+
+review all options here:
+https://bioinform.github.io/rnacocktail/
+"""
+
 """GATK quick start guide
 https://software.broadinstitute.org/gatk/documentation/quickstart?v=3
 java -version
@@ -68,7 +76,213 @@ print(split_cmd)
 subprocess.call(split_cmd, shell=True)
 
 # Indel Realignment (optional)
+"""
 # 5. Base Recalibration
+Docs for known sites:
+https://software.broadinstitute.org/gatk/documentation/article.php?id=1247
+
+The most recent dbSNP release (build ID > 132)
+Mills_and_1000G_gold_standard.indels.b37.vcf
+cd /sc/orga/projects/chdiTrios/Felix/dbs/gatk_resources
+
+# two sources (FTP and google cloud)
+ftp://ftp.broadinstitute.org/bundle/hg38/
+https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0
+
+# indels
+time wget \
+ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+time wget \
+ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz.tbi
+
+# dbsnp
+time wget \
+ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/dbsnp_146.hg38.vcf.gz
+time wget \
+ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/dbsnp_146.hg38.vcf.gz.tbi
+
+# need to use GATK bundle reference genome I guess
+time wget \
+ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/Homo_sapiens_assembly38.dict
+time wget \
+ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/Homo_sapiens_assembly38.fasta.fai
+time wget \
+ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/hg38/Homo_sapiens_assembly38.fasta.gz
+
+# according to this, the google cloude files are the most uptodate:
+https://gatkforums.broadinstitute.org/gatk/discussion/23170/gatk-resource-bundle
+
+time gunzip Homo_sapiens_assembly38.fasta.gz
+
+# Docs for running BQSR
+https://software.broadinstitute.org/gatk/documentation/article?id=2801
+
+convert from hg38 to GRCh38
+
+# solution to this problem:
+https://gatkforums.broadinstitute.org/gatk/discussion/8895/picard-sort-vcf-error
+
+cd /sc/orga/projects/chdiTrios/Felix/dbs/gatk_resources
+module load gatk/3.6-0
+module load picard/2.7.1
+module load samtools/1.9
+module load python/3.5.0 py_packages/3.5
+python
+
+import gzip
+import re
+
+ref_gatk_dir = '/sc/orga/projects/chdiTrios/Felix/dbs/gatk_resources/'
+ref_dict = ('/sc/orga/projects/chdiTrios/Felix/dbs/grch38_ens94/' +
+            'Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai')
+
+ref_list = []
+with open(ref_dict, 'r') as f:
+    for line in f:
+        ref_list.append(line.split('\t')[0])
+
+
+f = ref_gatk_dir + 'dbsnp_146.hg38.vcf.gz'
+# f = ref_gatk_dir + 'Mills_and_1000G_gold_standard.indels.hg38.vcf.gz'
+f_out_loc = re.sub('hg38|assembly38', 'grch38', f)
+f_out_loc = re.sub('.gz', '', f_out_loc)
+print(f_out_loc)
+count = 0
+contig_header_dict = {}
+with gzip.open(f, 'r') as f_in, open(f_out_loc, 'w') as f_out:
+    for line in f_in:
+        line = str(line, 'utf-8')
+        # print(line)
+        # convert from hg38 to GRCh38
+        line = re.sub('contig=<ID=chrM', 'contig=<ID=MT', line)
+        line = re.sub('contig=<ID=chr', 'contig=<ID=', line)
+        # exclude line if it has assembly information
+        if 'contig=<ID=' in line:
+            contig = line.split(',')[0].split('=')[-1]
+            # print(contig)
+            contig_header_dict[contig] = line
+            continue
+        line = re.sub('^chrM', 'MT', line)
+        line = re.sub('^chr', '', line)
+        line = re.sub('assembly=20', 'assembly=null', line)
+        # only keep line if it has a contig in the reference dictionary
+        if not line.startswith('#'):
+            contig = line.split('\t')[0]
+            if contig in ref_list:
+                _ = f_out.write(line)
+        else:
+            _ = f_out.write(line)
+        count += 1
+        if count % 10000 == 0:
+            # print(count/1275224) # for Mills_and_1000G_gold_standard
+            print(count)
+
+print(count)
+
+
+## Trying just converting the knownSites files to GRCH38 and running the
+SortVcf command
+
+ENSEMBL_DIR="/sc/orga/projects/chdiTrios/Felix/dbs/grch38_ens94/"
+ENSEMBL_FA=$ENSEMBL_DIR"Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+GATK_DICT=$ENSEMBL_DIR"Homo_sapiens.GRCh38.dna.primary_assembly.dict"
+
+cd /sc/orga/projects/chdiTrios/Felix/dbs/gatk_resources
+time java -jar $PICARD SortVcf \
+    I=Mills_and_1000G_gold_standard.indels.grch38.vcf \
+    O=Mills_and_1000G_gold_standard.indels.grch38.sorted.vcf \
+    SEQUENCE_DICTIONARY=$GATK_DICT
+
+time java -jar $PICARD SortVcf \
+    I=dbsnp_146.grch38.vcf \
+    O=dbsnp_146.grch38.sorted.vcf \
+    SEQUENCE_DICTIONARY=$GATK_DICT
+
+Soooo many bugs in GATK. That I think could be fixed very easily
+and make the software soooo much more robust
+
+1. no matching contigs. Even though GATK misleads by saying hg38/GRCh38
+are the same, they are not (chr vs not, MT vs M, random bits not named
+the same). Fine I'll focus on the main chr by renaming those and
+throw out all my other data
+
+2. Even though I ran GATK PICARD sort as the first step of
+my analysis, somehow my BAMs are not sorted appropriately! Luckily
+the error page is helpful
+https://gatkforums.broadinstitute.org/gatk/discussion/1328/errors-about-contigs-in-bam-or-vcf-files-not-being-properly-ordered-or-sorted
+
+3. Even though I renamed and re-ordered, I still got an error
+bc an alternate contig was not an exact match, even though
+the reorder page specifically says
+"Be aware that this tool will drop reads that don't have
+equivalent contigs in the new reference"
+So I scroll down to the comments which say I should use
+ALLOW_INCOMPLETE_DICT_CONCORDANCE=TRUE
+
+This worries me because I don't know what other side effects this
+setting might have... but nevertheless, onward
+
+4. New error
+Exception in thread "main" htsjdk.samtools.SAMFormatException: SAM
+validation error: ERROR: Read name SND00311:233:CC5P3ANXX:4:1301:12998:5699,
+No real operator (M|I|D|N) in CIGAR
+wtf? I created these BAMs/SAMs with PICARD effectively from scratch
+and I still get this error? Looks like I'm not the first one...
+https://gatkforums.broadinstitute.org/gatk/discussion/6571/picard-reordersam-error-read-cigar-m-operator-maps-off-end-of-reference
+
+
+"""
+
+"""1. Analyze patterns of covariation in the sequence dataset."""
+ref_gatk_dir = '/sc/orga/projects/chdiTrios/Felix/dbs/gatk_resources/'
+bqsr_mk_tbl_cmd = (
+    'time java -jar $GATK_JAR -T BaseRecalibrator ' +
+    '-R {} -I {} -knownSites {} -knownSites {} -o {}').format(
+    ref_gatk_dir + 'Homo_sapiens_grch38.fasta',
+    prefix + '_split.bam',
+    ref_gatk_dir + 'dbsnp_146.hg38.vcf.gz',
+    ref_gatk_dir + 'Mills_and_1000G_gold_standard.indels.hg38.vcf.gz',
+    prefix + '.recal_data.table')
+print(bqsr_mk_tbl_cmd)
+subprocess.call(bqsr_mk_tbl_cmd, shell=True)
+"""2. Do a second pass to analyze covariation remaining after recalibration
+"""
+bqsr_mk_tbl_p2_cmd = (
+    'time java -jar $GATK_JAR -T BaseRecalibrator ' +
+    '-R {} -I {} -knownSites {} -knownSites {} ' +
+    '-BQSR {} -o {}').format(
+    ref_gatk_dir + 'Homo_sapiens_assembly38.fasta',
+    prefix + '_split.bam',
+    ref_gatk_dir + 'dbsnp_146.hg38.vcf.gz',
+    ref_gatk_dir + 'Mills_and_1000G_gold_standard.indels.hg38.vcf.gz',
+    prefix + '.recal_data.table',
+    prefix + '.recal_data_pass2.table')
+print(bqsr_mk_tbl_p2_cmd)
+subprocess.call(bqsr_mk_tbl_p2_cmd, shell=True)
+"""3. Generate before/after plots
+java -jar GenomeAnalysisTK.jar \
+    -T AnalyzeCovariates \
+    -R reference.fa \
+    -L 20 \
+    -before recal_data.table \
+    -after post_recal_data.table \
+    -plots recalibration_plots.pdf
+"""
+bqsr_cmd = ('time java -jar $GATK_JAR -T PrintReads ' +
+            '-R {} -I {} -BQSR {}_bqsr.grp -o {}').format(
+    ref_fa, prefix + '_split.bam', prefix, prefix + '_bqsr.bam')
+print(bqsr_cmd)
+subprocess.call(bqsr_cmd, shell=True)
+
+"""4. Apply the recalibration to your sequence data
+java -jar GenomeAnalysisTK.jar \
+    -T PrintReads \
+    -R reference.fa \
+    -I input_reads.bam \
+    -L 20 \
+    -BQSR recal_data.table \
+    -o recal_reads.bam
+"""
 bqsr_cmd = ('time java -jar $GATK_JAR -T PrintReads ' +
             '-R {} -I {} -BQSR {}_bqsr.grp -o {}').format(
     ref_fa, prefix + '_split.bam', prefix, prefix + '_bqsr.bam')
@@ -76,11 +290,13 @@ print(bqsr_cmd)
 subprocess.call(bqsr_cmd, shell=True)
 # 6. Variant calling
 hc_cmd = ('time java -jar $GATK_JAR -T HaplotypeCaller -R {} ' +
-          '-I {}_bqsr.bam -dontUseSoftClippedBases -stand_call_conf 20.0 ' +
+          '-I {}_split.bam -dontUseSoftClippedBases -stand_call_conf 20.0 ' +
+          # '-dbsnp ' +
+          # dbsnp uses known sites for variant annotation
           '-o {}_gatk3.vcf').format(
     ref_fa, prefix, prefix)
 print(hc_cmd)
-# subprocess.call(hc_cmd, shell=True)
+subprocess.call(hc_cmd, shell=True)
 # 7. Variant filtering
 filter_cmd = ('time java -jar $GATK_JAR -T VariantFiltration ' +
               '-R {} -V {}_gatk3.vcf -window 35 -cluster 3 ' +

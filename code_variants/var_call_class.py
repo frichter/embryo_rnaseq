@@ -62,8 +62,8 @@ class bam_gatk(object):
         # Add read groups, sort, mark duplicates, and create index
         if not os.path.exists(self.sorted_bam):
             rg_cmd = ('time java -jar $PICARD AddOrReplaceReadGroups I={} ' +
-                      'O={} SO=coordinate RGID=id RGLB=nextera ' +
-                      'RGPL=ilmn RGPU=machine RGSM={}').format(
+                      'O={} SO=coordinate RGID=FelixRichter RGLB=Nextera ' +
+                      'RGPL=Illumina RGPU=machine RGSM={}').format(
                 self.in_sam, self.sorted_bam, self.id)
             print(rg_cmd)
             subprocess.call(rg_cmd, shell=True)

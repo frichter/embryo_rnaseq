@@ -71,8 +71,18 @@ star_cmd = ('time STAR --runThreadN 24 --genomeDir {} ' +
             '--readFilesIn {} {}').format(
     fq_i.star_idx, fq_i.prefix + '_star', fq_i.r1, fq_i.r2)
 print(star_cmd)
-# subprocess.call(star_cmd, shell=True)
+# subprocess.call(star_cmd, shell=True) # 28m12.203s
 # fq_i.RunSTAR()
+
+"""Alternative STAR run from
+https://gist.github.com/PoisonAlien/c6c03539cf4b1ac41cf1
+
+# unique parameters
+--outSAMstrandField intronMotif # seems specific to cufflinks/cuffdiff
+--outSAMattrRGline ID:$bn CN:CSI_HPK_lab LB:PairedEnd PL:Illumina \
+PU:Unknown SM:$bn # assigning readgroups later with picard
+
+"""
 
 
 """ Looping over multiple FastQ files (use this or BSUB)."""
