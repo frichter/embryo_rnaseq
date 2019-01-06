@@ -38,15 +38,6 @@ bam_i.run_bqsr()
 bam_i.run_gatk_hc()
 bam_i.run_gatk_var_filter()
 
-"""Future GATK directions (move to gatk_call_notes.py when implementing):
-
-- Consider parallelism or other methods of speeding up
-https://gatkforums.broadinstitute.org/gatk/discussion/1975/how-can-i-use-parallelism-to-make-gatk-tools-run-faster
-- Consider adding in the -Xmx and -Xms options
-- Consider other HaplotypeCaller arguments (e.g., -maxAltAlleles)
-https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
-"""
-
 
 def main():
     """Run GATK."""
@@ -70,6 +61,16 @@ def main():
 if __name__ == "__main__":
     done_msg = main()
     print(done_msg)
+
+
+"""Future GATK directions (move to gatk_call_notes.py when implementing):
+
+- Consider parallelism or other methods of speeding up
+https://gatkforums.broadinstitute.org/gatk/discussion/1975/how-can-i-use-parallelism-to-make-gatk-tools-run-faster
+- Consider adding in the -Xmx and -Xms options
+- Consider other HaplotypeCaller arguments (e.g., -maxAltAlleles)
+https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php
+"""
 
 #
 
