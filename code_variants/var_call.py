@@ -26,7 +26,8 @@ os.chdir(home_dir)
 bam_i = bam_gatk(file_prefix, home_dir, aligner='hisat2')
 bam_i.run_picard_rg()
 bam_i.run_picard_md()
-# bam_i.run_bqsr()
+# Indel Realignment (optional): not doing indels currently
+bam_i.run_bqsr()
 bam_i.run_gatk_hc()
 bam_i.run_gatk_var_filter()
 

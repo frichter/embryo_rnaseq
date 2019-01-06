@@ -99,6 +99,46 @@ class bam_gatk(object):
             print(split_cmd)
             subprocess.call(split_cmd, shell=True)
 
+    def run_bqsr(self):
+        """Run all the BQSR commands."""
+        """1. Analyze patterns of covariation in the sequence dataset."""
+        if not os.path.exists(self.bqsr_bam):
+            bqsr_mk_tbl_cmd = (
+                'time java  -Djava.io.tmpdir={} ' +
+                '-jar $GATK_JAR -T BaseRecalibrator ' +
+                '-R {} -I {} -knownSites {} -knownSites {} -o {}').format(
+                self.tmp_dir, self.ref_fa,
+                self.split_trim_bam,
+                self.ks_dbsnp, self.ks_indels,
+                self.prefix + '.recal_data.table')
+            print(bqsr_mk_tbl_cmd)
+            subprocess.call(bqsr_mk_tbl_cmd, shell=True)
+            """2. Do a second pass to analyze covariation
+            remaining after recalibration
+            """
+            bqsr_mk_tbl_p2_cmd = (
+                'time java  -Djava.io.tmpdir={} ' +
+                '-jar $GATK_JAR -T BaseRecalibrator ' +
+                '-R {} -I {} -knownSites {} -knownSites {} ' +
+                '-BQSR {} -o {}').format(
+                self.tmp_dir, self.ref_fa,
+                self.split_trim_bam,
+                self.ks_dbsnp, self.ks_indels,
+                self.prefix + '.recal_data.table',
+                self.prefix + '.recal_data_pass2.table')
+            print(bqsr_mk_tbl_p2_cmd)
+            subprocess.call(bqsr_mk_tbl_p2_cmd, shell=True)
+            # Indel Realignment (optional): not doing indels anyway
+            # 5. Base Recalibration. Docs:
+            # https://software.broadinstitute.org/gatk/documentation/article?id=44
+            bqsr_cmd = ('time java -Djava.io.tmpdir={} ' +
+                        '-jar $GATK_JAR -T PrintReads ' +
+                        '-R {} -I {} -BQSR {} -o {}').format(
+                self.tmp_dir, self.ref_fa, self.split_trim_bam,
+                self.prefix + '.recal_data_pass2.table', self.bqsr_bam)
+            print(bqsr_cmd)
+            subprocess.call(bqsr_cmd, shell=True)
+
     def run_gatk_hc(self):
         """Run GATK3 commands for variant calling."""
         if not os.path.exists(self.vcf_nofilter):
@@ -129,21 +169,6 @@ class bam_gatk(object):
                 self.tmp_dir, self.ref_fa, self.vcf_nofilter, self.vcf)
             print(filter_cmd)
             subprocess.call(filter_cmd, shell=True)
-
-    # def run_bqsr(self):
-    #     """Run all the BQSR commands."""
-    #
-        # Indel Realignment (optional): not doing indels anyway
-        # 5. Base Recalibration. Docs:
-        # https://software.broadinstitute.org/gatk/documentation/article?id=44
-        # if not os.path.exists(self.bqsr_bam):
-        #     bqsr_cmd = ('time java -Djava.io.tmpdir={} ' +
-        #                 '-jar $GATK_JAR -T PrintReads ' +
-        #                 '-R {} -I {} -BQSR {}_bqsr.grp -o {}').format(
-        #         self.tmp_dir, self.ref_fa, self.split_trim_bam,
-        #         self.prefix, self.bqsr_bam)
-        #     print(bqsr_cmd)
-        #     subprocess.call(bqsr_cmd, shell=True)
 
 
 """Running Samtools
