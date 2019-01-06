@@ -28,7 +28,7 @@ bam_i = bam_gatk(file_prefix, home_dir, aligner='hisat2')
 # bam_i.run_picard_cs()  # used in rnacocktail but purpose unclear so skipping
 bam_i.run_picard_rg()  # 12m
 bam_i.run_picard_md()  # also 12m
-bam_i.run_gatk_split_trim()
+bam_i.run_gatk_split_trim()  # 32mins
 # Indel Realignment (optional): not doing indels currently
 bam_i.run_bqsr()
 bam_i.run_gatk_hc()

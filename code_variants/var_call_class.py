@@ -68,6 +68,8 @@ class bam_gatk(object):
                 self.tmp_dir, self.in_sam, self.clean_sam)
             print(rg_cmd)
             subprocess.call(rg_cmd, shell=True)
+        else:
+            print('already ran PICARD CleanSam for', self.id)
 
     def run_picard_rg(self):
         """Run PICARD read group commands."""
@@ -83,7 +85,8 @@ class bam_gatk(object):
                 self.sorted_bam, self.id)
             print(rg_cmd)
             subprocess.call(rg_cmd, shell=True)
-        # time 60 mins
+        else:
+            print('already ran PICARD AddOrReplaceReadGroups for', self.id)
 
     def run_picard_md(self):
         """Run PICARD mark duplicates commands."""
@@ -98,6 +101,8 @@ class bam_gatk(object):
                 self.tmp_dir, self.sorted_bam, self.dedup_bam, self.prefix)
             print(dup_cmd)
             subprocess.call(dup_cmd, shell=True)
+        else:
+            print('already ran PICARD MarkDuplicates for', self.id)
 
     def run_gatk_split_trim(self):
         """Run GATK3 Split'N'Trim and reassign mapping qualities."""
@@ -110,6 +115,8 @@ class bam_gatk(object):
                 self.tmp_dir, self.ref_fa, self.dedup_bam, self.split_trim_bam)
             print(split_cmd)
             subprocess.call(split_cmd, shell=True)
+        else:
+            print('already ran GATK SplitNCigarReads for', self.id)
 
     def run_bqsr(self):
         """Run all the BQSR commands."""
@@ -159,6 +166,8 @@ class bam_gatk(object):
                 self.prefix + '.recal_data_pass2.table', self.bqsr_bam)
             print(bqsr_cmd)
             subprocess.call(bqsr_cmd, shell=True)
+        else:
+            print('already ran GATK BQSR for', self.id)
 
     def run_gatk_hc(self):
         """Run GATK3 commands for variant calling."""
@@ -178,6 +187,8 @@ class bam_gatk(object):
                 self.vcf_nofilter)
             print(hc_cmd)
             subprocess.call(hc_cmd, shell=True)
+        else:
+            print('already ran GATK HaplotypeCaller for', self.id)
 
     def run_gatk_var_filter(self):
         """Run GATK3 commands for variant filtering."""
@@ -191,5 +202,7 @@ class bam_gatk(object):
                 self.tmp_dir, self.ref_fa, self.vcf_nofilter, self.vcf)
             print(filter_cmd)
             subprocess.call(filter_cmd, shell=True)
+        else:
+            print('already ran GATK VariantFiltration for', self.id)
 
 #
