@@ -122,7 +122,7 @@ class bam_gatk(object):
         """Run all the BQSR commands."""
         """1. Analyze patterns of covariation in the sequence dataset."""
         if not os.path.exists(self.bqsr_bam):
-            self.clean_known_sites()
+            # self.clean_known_sites()
             bqsr_mk_tbl_cmd = (
                 'time java  -Djava.io.tmpdir={} ' +
                 '-jar $GATK_JAR -T BaseRecalibrator ' +
@@ -172,7 +172,7 @@ class bam_gatk(object):
     def run_gatk_hc(self):
         """Run GATK3 commands for variant calling."""
         if not os.path.exists(self.vcf_nofilter):
-            self.clean_known_sites()
+            # self.clean_known_sites()
             hc_cmd = ('time java -Djava.io.tmpdir={} ' +
                       '-jar $GATK_JAR -T HaplotypeCaller -R {} ' +
                       '-I {} -dontUseSoftClippedBases ' +
