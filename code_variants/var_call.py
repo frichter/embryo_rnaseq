@@ -32,3 +32,20 @@ bam_i.run_gatk_hc()
 bam_i.run_gatk_var_filter()
 
 #
+
+"""Running Samtools
+
+# notes from HISAT2 docs
+samtools view -bS eg2.sam > eg2.bam
+samtools sort eg2.bam -o eg2.sorted.bam
+samtools mpileup -uf $HISAT2_HOME/example/reference/22_20-21M.fa
+eg2.sorted.bam | bcftools view -bvcg - > eg2.raw.bcf
+
+# URLS
+Run samtools mpileup, http://www.htslib.org/doc/samtools.html
+Then apparently run bcftools mpileup or call,
+http://www.htslib.org/doc/bcftools.html#mpileup
+Example workflow:
+http://www.htslib.org/workflow/#mapping_to_variant
+
+"""
