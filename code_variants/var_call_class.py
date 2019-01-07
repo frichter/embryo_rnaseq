@@ -177,7 +177,7 @@ class bam_gatk(object):
                       '-jar $GATK_JAR -T HaplotypeCaller -R {} ' +
                       '-I {} -dontUseSoftClippedBases ' +
                       # dbsnp uses known sites for variant annotation:
-                      '-dbsnp {} ' +
+                      '--dbsnp {} ' +
                       '-stand_call_conf 20.0 ' +
                       '-o {}').format(
                 self.tmp_dir,
