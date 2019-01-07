@@ -50,7 +50,7 @@ class fq_pair(object):
         if not os.path.exists(self.prefix + '_hisat2.sam'):
             hisat2_cmd = ('time hisat2 --time -x {} -1 {} -2 {} -S {}.sam ' +
                           '--met-file {}_metrics.txt ' +
-                          '--dta --un-conc {}_noPEalign -p 40').format(
+                          '--dta --un-conc {}_noPEalign -p 50').format(
                 self.hisat2_idx, self.r1, self.r2, self.prefix + '_hisat2',
                 self.prefix + '_hisat2', self.prefix + '_hisat2')
             print(hisat2_cmd)
