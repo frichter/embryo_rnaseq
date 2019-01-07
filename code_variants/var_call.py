@@ -13,8 +13,6 @@ module load gatk/3.6-0
 module load picard/2.7.1
 module load python/3.5.0 py_packages/3.5
 
-python
-
 ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_3_20_17_S31_L007"
 python var_call.py --aligner "hisat2" --bam $ID
 
