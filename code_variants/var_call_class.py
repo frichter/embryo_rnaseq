@@ -182,8 +182,8 @@ class bam_gatk(object):
                       '-o {}').format(
                 self.tmp_dir,
                 self.ref_fa,
+                self.bqsr_bam,  # switch to self.bqsr_bam
                 self.ks_dbsnp,
-                self.split_trim_bam,  # switch to self.bqsr_bam
                 self.vcf_nofilter)
             print(hc_cmd)
             subprocess.call(hc_cmd, shell=True)
