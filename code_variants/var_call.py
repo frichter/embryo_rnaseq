@@ -23,6 +23,7 @@ import argparse
 
 from var_call_class import bam_gatk
 
+"""
 home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
 file_prefix = home_dir + 'FASTQ/95724_C1_THS_024_BxE2_3_13_17_S20_L004'
 os.chdir(home_dir)
@@ -35,6 +36,7 @@ bam_i.run_gatk_split_trim()  # 32mins
 bam_i.run_bqsr()
 bam_i.run_gatk_hc()
 bam_i.run_gatk_var_filter()
+"""
 
 
 def main():
