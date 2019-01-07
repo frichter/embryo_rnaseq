@@ -48,5 +48,5 @@ python align_qc.py --hisat2 --fq $ID
 # module load gatk/3.6-0
 # module load picard/2.7.1
 # module load python/3.5.0 py_packages/3.5
-# python var_call.py --aligner "hisat2" --bam $ID
+# time python var_call.py --aligner "hisat2" --bam $ID
 # python var_call.py --aligner "star" --bam $ID
