@@ -1,4 +1,4 @@
-#BSUB -W 150:00
+#BSUB -W 144:00
 #BSUB -q premium
 #BUSB -n 30
 #BSUB -R "rusage[mem=8500]"
