@@ -1,12 +1,12 @@
-#BSUB -W 48:00
+#BSUB -W 150:00
 #BSUB -q premium
 #BUSB -n 30
-#BSUB -R "rusage[mem=10000]"
+#BSUB -R "rusage[mem=8500]"
 #BSUB -P acc_schade01a
 #BSUB -J "embryo_align_hisat2[1-81]"
 #BSUB -m manda
-#BSUB -o logs/out_%J_%I.stdout
-#BSUB -e logs/err_%J_%I.stderr
+#BSUB -o logs/%J_%I.stdout
+#BSUB -e logs/%J_%I.stderr
 
 
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
