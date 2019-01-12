@@ -38,7 +38,7 @@ print(count)
 
 """STAR output check."""
 star_log_iter = glob.iglob(home_dir + 'FASTQ/*starLog.final.out')
-count = 0
+count, tot_count = 0, 0
 for star_log in star_log_iter:
     if os.stat(star_log).st_size == 0:
         star_f_iter = glob.iglob(re.sub('Log.final.out', '*', star_log))
@@ -50,9 +50,10 @@ for star_log in star_log_iter:
                 print('deleting unfinishing alignment for ' + star_f)
                 os.remove(star_f)
             count += 1
+    tot_count += 1
 
 # number of files deleted:
-print(count)
+print(count, tot_count)
 
 """GATK output check."""
 

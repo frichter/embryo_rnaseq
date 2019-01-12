@@ -1,9 +1,9 @@
-#BSUB -W 144:00
+#BSUB -W 2:00
 #BSUB -q premium
 #BUSB -n 30
-#BSUB -R "rusage[mem=8500]"
+#BSUB -R "rusage[mem=40000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_align_hisat2[1-81]"
+#BSUB -J "embryo_align_star[1-5]"
 #BSUB -m manda
 #BSUB -o logs/%J_%I.stdout
 #BSUB -e logs/%J_%I.stderr
@@ -27,20 +27,20 @@ echo $ID
 
 
 #################################### HISAT2 alignment
-## Settings: (-W 30:00, -R mem=10000, -n 30 -J embryo_align_hisat2
-module purge
-module load fastqc/0.11.7
-module load hisat2/2.0.5
-module load python/3.5.0 py_packages/3.5
-python align_qc.py --hisat2 --fq $ID
+## Settings: (-W 144:00, -R mem=8500, -n 30 -J embryo_align_hisat2
+# module purge
+# module load fastqc/0.11.7
+# module load hisat2/2.0.5
+# module load python/3.5.0 py_packages/3.5
+# python align_qc.py --hisat2 --fq $ID
 ## HISAT2 is advertised as requiring only 3-4 Gb
 
 #################################### STAR alignment
 ## Settings: -W 1:30, -R mem=40000, -n 30 -J embryo_align_star
-# module purge
-# module load python/3.5.0
-# module load star/2.6.1d
-# python align_qc.py --star --fq $ID
+module purge
+module load python/3.5.0
+module load star/2.6.1d
+python align_qc.py --star --fq $ID
 
 #################################### Variant calling
 ## Settings: -W 6:00, -R mem=35000, -J embryo_var_gatk
