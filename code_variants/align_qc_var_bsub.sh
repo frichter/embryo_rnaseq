@@ -3,7 +3,7 @@
 #BUSB -n 30
 #BSUB -R "rusage[mem=38000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_align_star[2-10]"
+#BSUB -J "embryo_align_star[11-81]"
 #BSUB -m manda
 #BSUB -o logs/%J_%I.stdout
 #BSUB -e logs/%J_%I.stderr
