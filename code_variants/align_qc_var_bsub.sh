@@ -1,7 +1,7 @@
 #BSUB -W 12:00
 #BSUB -q premium
 #BUSB -n 30
-#BSUB -R "rusage[mem=45000]"
+#BSUB -R "rusage[mem=100000]"
 #BSUB -P acc_schade01a
 #BSUB -J "embryo_align_star[2-81]"
 #BSUB -m manda
@@ -53,3 +53,4 @@ python align_qc.py --star --fq $ID
 
 ############ Minerva resources
 # decide on partition w https://hpc.mssm.edu/resources/hardware
+# 256 Gb/node on Manda (mothra not listed)
