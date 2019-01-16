@@ -47,10 +47,10 @@ for star_log in star_log_iter:
         for star_f in star_f_iter:
             if os.path.isdir(star_f):
                 print('deleting directory and contents of ' + star_f)
-                shutil.rmtree(star_f)
+                # shutil.rmtree(star_f)
             else:
                 print('deleting unfinishing alignment for ' + star_f)
-                os.remove(star_f)
+                # os.remove(star_f)
             count += 1
         uniq_ct += 1
     tot_count += 1
