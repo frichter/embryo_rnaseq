@@ -23,13 +23,15 @@ def main():
     parser.add_argument('--hisat2', default=False, action='store_true')
     parser.add_argument('--star', default=False, action='store_true')
     parser.add_argument('--fq', type=str, help='FQ prefix')
+    parser.add_argument('--n', default=50, type=int, help='Number of cores')
     args = parser.parse_args()
     db_loc = '/sc/orga/projects/chdiTrios/Felix/dbs/'
     fq_i = fq_pair_qc(
         pair_file_loc=args.fq,
         home_dir='/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/',
         hisat2_idx=db_loc + 'grch38_snp_tran/genome_snp_tran',
-        star_idx=db_loc + 'grch38_star/')
+        star_idx=db_loc + 'grch38_star/',
+        n_cores=args.n)
     os.chdir(fq_i.home_dir)
     fq_i.TrimAdapters()  # takes about 200 minutes
     if args.trimonly:

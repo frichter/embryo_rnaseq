@@ -19,7 +19,7 @@ import os
 class fq_pair(object):
     """Create a FastQ pair object."""
 
-    def __init__(self, pair_file_loc, home_dir, hisat2_idx, star_idx):
+    def __init__(self, pair_file_loc, home_dir, hisat2_idx, star_idx, n):
         """Create an object for the FASTQ file."""
         # assign the filenames to the instance
         self.pair_file_loc = pair_file_loc
@@ -37,6 +37,7 @@ class fq_pair(object):
         self.hisat2_idx = hisat2_idx
         # STAR aligner index
         self.star_idx = star_idx
+        self.n_cores = n
 
     def RunHISAT2(self):
         """Run HISAT2.
@@ -50,9 +51,9 @@ class fq_pair(object):
         if not os.path.exists(self.prefix + '_hisat2.sam'):
             hisat2_cmd = ('time hisat2 --time -x {} -1 {} -2 {} -S {}.sam ' +
                           '--met-file {}_metrics.txt ' +
-                          '--dta --un-conc {}_noPEalign -p 50').format(
+                          '--dta --un-conc {}_noPEalign -p {}').format(
                 self.hisat2_idx, self.r1, self.r2, self.prefix + '_hisat2',
-                self.prefix + '_hisat2', self.prefix + '_hisat2')
+                self.prefix + '_hisat2', self.prefix + '_hisat2', self.n_cores)
             print(hisat2_cmd)
             subprocess.call(hisat2_cmd, shell=True)
         else:
@@ -81,12 +82,13 @@ class fq_pair(object):
         """
         out_bam = self.prefix + '_starAligned.sortedByCoord.out.bam'
         if not os.path.exists(out_bam):
-            star_cmd = ('time STAR --runThreadN 40 --genomeDir {} ' +
+            star_cmd = ('time STAR --runThreadN {} --genomeDir {} ' +
                         '--readFilesCommand zcat --outFileNamePrefix {} ' +
                         '--outSAMtype BAM SortedByCoordinate ' +
                         '--twopassMode Basic ' +
                         '--readFilesIn {} {}').format(
-                self.star_idx, self.prefix + '_star', self.r1, self.r2)
+                self.n_cores, self.star_idx, self.prefix + '_star',
+                self.r1, self.r2)
             print(star_cmd)
             subprocess.call(star_cmd, shell=True)
         else:

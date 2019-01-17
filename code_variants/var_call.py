@@ -21,27 +21,16 @@ ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_
 
 time python var_call.py --aligner "hisat2" --bam $ID
 
+ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004"
+time python var_call.py --aligner "star" --bam $ID
+
+
 """
 
 import os
 import argparse
 
 from var_call_class import bam_gatk
-
-"""
-home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
-file_prefix = home_dir + 'FASTQ/95724_C1_THS_024_BxE2_3_13_17_S20_L004'
-os.chdir(home_dir)
-bam_i = bam_gatk(file_prefix, home_dir, aligner='hisat2')
-# bam_i.run_picard_cs()  # used in rnacocktail but purpose unclear so skipping
-bam_i.run_picard_rg()  # 12m
-bam_i.run_picard_md()  # also 12m
-bam_i.run_gatk_split_trim()  # 32mins
-# Indel Realignment (optional): not doing indels currently
-bam_i.run_bqsr()
-bam_i.run_gatk_hc()
-bam_i.run_gatk_var_filter()
-"""
 
 
 def main():

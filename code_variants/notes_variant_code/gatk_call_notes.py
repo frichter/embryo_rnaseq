@@ -49,6 +49,22 @@ https://software.broadinstitute.org/gatk/documentation/article.php?id=1601
 """
 
 
+"""
+home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
+file_prefix = home_dir + 'FASTQ/95724_C1_THS_024_BxE2_3_13_17_S20_L004'
+os.chdir(home_dir)
+bam_i = bam_gatk(file_prefix, home_dir, aligner='hisat2')
+# bam_i.run_picard_cs()  # used in rnacocktail but purpose unclear so skipping
+bam_i.run_picard_rg()  # 12m
+bam_i.run_picard_md()  # also 12m
+bam_i.run_gatk_split_trim()  # 32mins
+# Indel Realignment (optional): not doing indels currently
+bam_i.run_bqsr()
+bam_i.run_gatk_hc()
+bam_i.run_gatk_var_filter()
+"""
+
+
 os.chdir('/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/')
 prefix = 'FASTQ/trim_q20/75888_C4_THS_014_BxE8_2_28_17_S18_L004_hisat2'
 id = re.sub('.*ASTQ/|.*trim_q20/', '', prefix)

@@ -60,6 +60,20 @@ for star_log in star_log_iter:
 # number of files deleted:
 print(del_count, uniq_del_ct, tot_count)
 
-"""GATK output check."""
+"""GATK output check.
+
+Failed files
+Exception in thread "main" htsjdk.samtools.SAMFormatException:
+Error parsing text SAM file. Not enough fields
+
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/
+tail 90099_C4_THS_010_BxE10_3_1_17_S2_L001_hisat2.sam
+Line 96058617
+SND00311:234:CC56TANXX:1:2305:13307:65206
+
+rm 90099_C4_THS_010_BxE10_3_1_17_S2_L001_hisat2_rg_sorted.bam
+# STAR number of input reads 45255155
+
+"""
 
 #
