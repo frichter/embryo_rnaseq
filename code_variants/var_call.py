@@ -50,6 +50,8 @@ def main():
     home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
     os.chdir(home_dir)
     bam_i = bam_gatk(args.bam, home_dir, aligner=args.aligner)
+    if not os.path.exists(bam_i.in_sam):
+        return 'BAM not available for ' + args.bam
     bam_i.run_picard_rg()  # 12m
     bam_i.run_picard_md()  # also 12m
     bam_i.run_gatk_split_trim()

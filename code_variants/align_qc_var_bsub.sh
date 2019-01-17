@@ -1,7 +1,7 @@
-#BSUB -W 12:00
+#BSUB -W 100:00
 #BSUB -q premium
 #BUSB -n 30
-#BSUB -R "rusage[mem=100000]"
+#BSUB -R "rusage[mem=50000]"
 #BSUB -P acc_schade01a
 #BSUB -J "embryo_align_star[2-81]"
 #BSUB -m manda
@@ -36,19 +36,19 @@ echo $ID
 ## HISAT2 is advertised as requiring only 3-4 Gb
 
 #################################### STAR alignment
-## Settings: -W 4:00, -R mem=38000, -n 30 -J embryo_align_star
-module purge
-module load python/3.5.0
-module load star/2.6.1d
-python align_qc.py --star --fq $ID
+## Settings: -W 12:00, -R mem=100000, -n 30 -J embryo_align_star
+# module purge
+# module load python/3.5.0
+# module load star/2.6.1d
+# python align_qc.py --star --fq $ID
 
 #################################### Variant calling
-## Settings: -W 6:00, -R mem=35000, -J embryo_var_gatk
-# module purge
-# module load gatk/3.6-0
-# module load picard/2.7.1
-# module load python/3.5.0 py_packages/3.5
-# time python var_call.py --aligner "hisat2" --bam $ID
+## Settings: -W 6:00, -R mem=40000, -J embryo_var_gatk
+module purge
+module load gatk/3.6-0
+module load picard/2.7.1
+module load python/3.5.0 py_packages/3.5
+time python var_call.py --aligner "hisat2" --bam $ID
 # python var_call.py --aligner "star" --bam $ID
 
 ############ Minerva resources

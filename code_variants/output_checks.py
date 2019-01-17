@@ -39,7 +39,7 @@ print(uniq_ct, count)
 
 """STAR output check."""
 star_log_iter = glob.iglob(home_dir + 'FASTQ/*starLog.progress.out')
-count, uniq_ct, tot_count = 0, 0, 0
+del_count, uniq_del_ct, tot_count = 0, 0, 0
 for star_log in star_log_iter:
     star_f_final = re.sub('progress.out', 'final.out', star_log)
     if not os.path.exists(star_f_final):
@@ -47,18 +47,18 @@ for star_log in star_log_iter:
         for star_f in star_f_iter:
             if os.path.isdir(star_f):
                 print('deleting directory and contents of ' + star_f)
-                shutil.rmtree(star_f)
+                # shutil.rmtree(star_f)
             else:
                 print('deleting unfinishing alignment for ' + star_f)
-                os.remove(star_f)
-            count += 1
-        uniq_ct += 1
-    else:
-        print(star_f_final)
+                # os.remove(star_f)
+            del_count += 1
+        uniq_del_ct += 1
+    # else:
+    #     print(star_f_final)
     tot_count += 1
 
 # number of files deleted:
-print(count, uniq_ct, tot_count)
+print(del_count, uniq_del_ct, tot_count)
 
 """GATK output check."""
 
