@@ -13,10 +13,13 @@ module load gatk/3.6-0
 module load picard/2.7.1
 module load python/3.5.0 py_packages/3.5
 
-ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_3_20_17_S31_L007"
-time python var_call.py --aligner "hisat2" --bam $ID
+# HISAT2 not ready for this ID:
+ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/95614_C1_THS_009_BxE9_2_20_17_S8_L002"
 
-# 1593m22.789s + 158m41.209s = ~29.2hrs
+# already run (1593m22.789s + 158m41.209s = ~29.2hrs)
+ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_3_20_17_S31_L007"
+
+time python var_call.py --aligner "hisat2" --bam $ID
 
 """
 
@@ -51,7 +54,7 @@ def main():
     os.chdir(home_dir)
     bam_i = bam_gatk(args.bam, home_dir, aligner=args.aligner)
     if not os.path.exists(bam_i.in_sam):
-        return 'BAM not available for ' + args.bam
+        return 'BAM not available for ' + args.prefix
     bam_i.run_picard_rg()  # 12m
     bam_i.run_picard_md()  # also 12m
     bam_i.run_gatk_split_trim()
