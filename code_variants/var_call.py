@@ -21,7 +21,7 @@ ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_
 
 time python var_call.py --aligner "hisat2" --bam $ID
 
-ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004"
+ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/FASTQ/83738_C7_THS_026_BxE5_3_15_17_S28_L006"
 time python var_call.py --aligner "star" --bam $ID
 
 
@@ -43,7 +43,7 @@ def main():
     os.chdir(home_dir)
     bam_i = bam_gatk(args.bam, home_dir, aligner=args.aligner)
     if not os.path.exists(bam_i.in_sam):
-        return 'BAM not available for ' + args.prefix
+        return 'BAM/SAM not available ' + bam_i.in_sam
     bam_i.run_picard_rg()  # 12m
     bam_i.run_picard_md()  # also 12m
     bam_i.run_gatk_split_trim()
