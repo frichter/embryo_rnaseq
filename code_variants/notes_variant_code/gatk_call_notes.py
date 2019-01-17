@@ -62,6 +62,33 @@ bam_i.run_gatk_split_trim()  # 32mins
 bam_i.run_bqsr()
 bam_i.run_gatk_hc()
 bam_i.run_gatk_var_filter()
+
+# trying with STAR
+home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
+file_prefix = home_dir + 'FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004'
+os.chdir(home_dir)
+bam_i = bam_gatk(file_prefix, home_dir, aligner='star')
+bam_i.prefix
+# bam_i.run_picard_rg()
+star_bam = file_prefix + '_starAligned.sortedByCoord.out.bam'
+rg_cmd = ('time java -Djava.io.tmpdir={} ' +
+          '-jar $PICARD AddOrReplaceReadGroups I={} ' +
+          'O={} SO=coordinate RGID=FelixRichter RGLB=Nextera ' +
+          'RGPL=ILLUMINA RGPU=machine RGSM={}').format(
+    bam_i.tmp_dir,
+    # use clean_sam if using run_picard_cs, otherwise in_sam:
+    star_bam,
+    bam_i.sorted_bam, bam_i.id)
+print(rg_cmd)
+subprocess.call(rg_cmd, shell=True)
+
+bam_i.run_picard_md()  # also 12m
+bam_i.run_gatk_split_trim()  # 32mins
+# Indel Realignment (optional): not doing indels currently
+bam_i.run_bqsr()
+bam_i.run_gatk_hc()
+bam_i.run_gatk_var_filter()
+
 """
 
 

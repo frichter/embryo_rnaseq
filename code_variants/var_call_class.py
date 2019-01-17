@@ -34,9 +34,10 @@ class bam_gatk(object):
                         'embryo_rnaseq/tmp_dir/')
         # include aligner information in file name
         aligner_types = ['hisat2', 'star']
-        if aligner not in aligner_types:
-            raise ValueError("Invalid aligner. Expected one: {}".format(
-                aligner_types))
+        self.aligner = aligner
+        if self.aligner not in aligner_types:
+            raise ValueError("Invalid aligner. Expected {} but got {}".format(
+                aligner_types, self.aligner))
         self.prefix = file_prefix + '_' + aligner
         self.id = re.sub('.*ASTQ/|.*trim_q20/', '', self.prefix)
         # intermediate bams from the GATK steps
@@ -45,6 +46,10 @@ class bam_gatk(object):
     def init_file_names(self):
         """Initialize file names for intermediate and final GATK steps."""
         self.in_sam = self.prefix + '.sam'
+        if self.aligner == 'star':
+            self.in_sam = self.prefix + 'Aligned.sortedByCoord.out.bam'
+        elif self.aligner == 'hisat2':
+            self.in_sam = self.prefix + '.sam'
         self.clean_sam = self.prefix + '_clean.bam'
         self.sorted_bam = self.prefix + '_rg_sorted.bam'
         self.dedup_bam = self.prefix + '_dedupped.bam'
