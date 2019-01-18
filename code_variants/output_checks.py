@@ -24,18 +24,19 @@ home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
 
 """Hisat2 output check."""
 hs_met_iter = glob.iglob(home_dir + 'FASTQ/*hisat2_metrics.txt')
-count, uniq_ct = 0, 0
+del_count, uniq_del_ct, tot_count = 0, 0, 0
 for hs_met in hs_met_iter:
     if os.stat(hs_met).st_size == 0:
-        uniq_ct += 1
+        uniq_del_ct += 1
         hs_f_iter = glob.iglob(re.sub('_metrics.txt', '*', hs_met))
         for hs_f in hs_f_iter:
             print('deleting unfinishing alignment for ' + hs_f)
             # os.remove(hs_f)
-            count += 1
+            del_count += 1
+    tot_count += 1
 
 # number of files deleted:
-print(uniq_ct, count)
+print(tot_count, uniq_del_ct, del_count)
 
 """STAR output check."""
 star_log_iter = glob.iglob(home_dir + 'FASTQ/*starLog.progress.out')
@@ -47,10 +48,10 @@ for star_log in star_log_iter:
         for star_f in star_f_iter:
             if os.path.isdir(star_f):
                 print('deleting directory and contents of ' + star_f)
-                # shutil.rmtree(star_f)
+                shutil.rmtree(star_f)
             else:
                 print('deleting unfinishing alignment for ' + star_f)
-                # os.remove(star_f)
+                os.remove(star_f)
             del_count += 1
         uniq_del_ct += 1
     # else:

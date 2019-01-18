@@ -52,12 +52,14 @@ len(star_todo)
 
 """Loop over to-do files."""
 os.chdir(home_dir + 'code_variants')
-hs_cmd = 'python align_qc.py --hisat2 --fq {} --n 10'
-# subprocess.call(hs_cmd.format(hs_todo[0]), shell=True)
-for hs_todo_i in hs_todo:
-    subprocess.call(hs_cmd.format(hs_todo_i), shell=True)
+
+# hs_cmd = 'python align_qc.py --hisat2 --fq {} --n 10'
+# # subprocess.call(hs_cmd.format(hs_todo[0]), shell=True)
+# for hs_todo_i in hs_todo:
+#     subprocess.call(hs_cmd.format(hs_todo_i), shell=True)
 
 star_cmd = 'python align_qc.py --star --fq {} --n 10'
+subprocess.call(star_cmd.format(star_todo[0]), shell=True)
 for star_todo_i in star_todo:
     subprocess.call(star_cmd.format(star_todo_i), shell=True)
 
