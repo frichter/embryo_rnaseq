@@ -12,7 +12,7 @@
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 
 # submit with 
-bsub < align_qc_var_bsub.sh
+# bsub < align_qc_var_bsub.sh
 # max indices [1-81]
 
 let i=$LSB_JOBINDEX
