@@ -8,7 +8,7 @@ felix.richter@icahn.mssm.edu
 1/4/2019
 Description: check HISAT2, STAR, GATK and other outputs for completion
 
-cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/
+cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 module load python/3.5.0 py_packages/3.5
 python
 
@@ -19,8 +19,11 @@ import os
 import re
 import shutil
 
+from var_call_class import bam_gatk
+
 """Global variables."""
 home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
+os.chdir(home_dir)
 
 """Hisat2 output check."""
 hs_met_iter = glob.iglob(home_dir + 'FASTQ/*hisat2_metrics.txt')
@@ -63,6 +66,45 @@ print(del_count, uniq_del_ct, tot_count)
 
 """GATK output check.
 
+Overview:
+if next file does not exist, delete current file
+OR
+if filterved VCF does not exist, delete all GATK intermediate files
+
+if stderr has '##### ERROR A USER ERROR has occurred'
+grep -c '##### ERROR A USER ERROR has occurred' *stderr
+then notify user and examine (and probably delete) the HISAT2 input
+Run extra HISAT2 alignments on interactive6
+
+with open(home_dir + 'metadata/fq_prefix_list.txt', 'r') as in_f:
+    all_f = [i.strip() for i in in_f]
+
+aligner = 'hisat2'  # 'star'
+# bam_name_i = all_f[0]
+todo_ct, del_ct, all_ct = 0, 0, 0
+for bam_name_i in all_f:
+    bam_i = bam_gatk(bam_name_i, home_dir, aligner=aligner)
+    if not os.path.exists(bam_i.vcf):
+        f_list = [bam_i.clean_sam, bam_i.sorted_bam, bam_i.dedup_bam,
+                  bam_i.split_trim_bam, bam_i.bqsr_bam, bam_i.vcf_nofilter]
+        # print(f_list)
+        for f in f_list:
+            # print(f)
+            if os.path.exists(f):
+                print('deleting', f)
+                print(os.stat(f).st_size)
+                # os.remove(f)
+                del_ct += 1
+        # break
+        todo_ct += 1
+    else:
+        print('GATK fully completed for', bam_name_i)
+        # get the file line of the already completed jobs so they aren't rerun
+        print(all_ct)
+    all_ct += 1
+
+
+print(todo_ct, del_ct)
 Failed files
 Exception in thread "main" htsjdk.samtools.SAMFormatException:
 Error parsing text SAM file. Not enough fields
