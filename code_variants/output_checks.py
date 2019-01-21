@@ -75,6 +75,7 @@ if stderr has '##### ERROR A USER ERROR has occurred'
 grep -c '##### ERROR A USER ERROR has occurred' *stderr
 then notify user and examine (and probably delete) the HISAT2 input
 Run extra HISAT2 alignments on interactive6
+"""
 
 with open(home_dir + 'metadata/fq_prefix_list.txt', 'r') as in_f:
     all_f = [i.strip() for i in in_f]
@@ -92,6 +93,7 @@ for bam_name_i in all_f:
             # print(f)
             if os.path.exists(f):
                 print('deleting', f)
+                # the 0-sized files might reflect HISAT2 problematic inputs
                 print(os.stat(f).st_size)
                 # os.remove(f)
                 del_ct += 1
@@ -105,6 +107,7 @@ for bam_name_i in all_f:
 
 
 print(todo_ct, del_ct)
+"""
 Failed files
 Exception in thread "main" htsjdk.samtools.SAMFormatException:
 Error parsing text SAM file. Not enough fields
