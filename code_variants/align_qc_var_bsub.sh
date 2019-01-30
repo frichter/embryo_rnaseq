@@ -1,9 +1,9 @@
 #BSUB -W 144:00
 #BSUB -q premium
 #BUSB -n 30
-#BSUB -R "rusage[mem=30000]"
+#BSUB -R "rusage[mem=34000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_var_star_gatk[1-81]"
+#BSUB -J "embryo_var_star_gatk[30-81]"
 #BSUB -m manda
 #BSUB -o logs/%J_%I.stdout
 #BSUB -e logs/%J_%I.stderr
