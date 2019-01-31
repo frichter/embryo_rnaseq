@@ -102,7 +102,7 @@ hs_iter = [
 with open(home_dir + 'metadata/fq_prefix_list.txt', 'r') as in_f:
     all_f = [i.strip() for i in in_f]
 
-aligner = 'star'  # 'star' hisat2
+aligner = 'hisat2'  # 'star' hisat2
 # bam_name_i = all_f[0]
 todo_ct, del_ct, all_ct = 0, 0, 0
 for bam_name_i in all_f:

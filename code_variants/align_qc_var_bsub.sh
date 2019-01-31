@@ -3,7 +3,7 @@
 #BUSB -n 30
 #BSUB -R "rusage[mem=34000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_var_star_gatk[30-81]"
+#BSUB -J "embryo_var_star_gatk[4-81]"
 #BSUB -m manda
 #BSUB -o logs/%J_%I.stdout
 #BSUB -e logs/%J_%I.stderr
@@ -49,8 +49,8 @@ module purge
 module load gatk/3.6-0
 module load picard/2.7.1
 module load python/3.5.0 py_packages/3.5
-# time python var_call.py --aligner "hisat2" --bam $ID
-time python var_call.py --aligner "star" --bam $ID
+time python var_call.py --aligner "hisat2" --bam $ID
+# time python var_call.py --aligner "star" --bam $ID
 # Max time because I don't want to deal with figuring out what
 # happens if it crashes
 
