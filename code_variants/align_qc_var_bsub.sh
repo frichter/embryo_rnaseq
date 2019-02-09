@@ -16,7 +16,7 @@ cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 # max indices [1-81]
 
 let i=$LSB_JOBINDEX
-ID=$(tail -n+$i ../metadata/fq_prefix_list.txt | head -n1)
+ID=$(tail -n+$i ../metadata/fq_subdir_prefix_list.txt | head -n1)
 echo $ID
 
 #################################### Trimming

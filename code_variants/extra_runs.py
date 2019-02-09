@@ -34,14 +34,16 @@ import os
 """Global variables."""
 home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
 
-"""Files with completed runs."""
+"""Files with completed runs.
+WARNING: DEPRECATED!!
+"""
 hs_met_iter = glob.iglob(home_dir + 'FASTQ/*hisat2_metrics.txt')
 hs_f = [re.sub('_hisat2.*', '', i) for i in hs_met_iter]
 star_log_iter = glob.iglob(home_dir + 'FASTQ/*starLog.final.out')
 star_f = [re.sub('_star.*', '', i) for i in star_log_iter]
 
 """All files."""
-with open(home_dir + 'metadata/fq_prefix_list.txt', 'r') as in_f:
+with open(home_dir + 'metadata/fq_subdir_prefix_list.txt', 'r') as in_f:
     all_f = [i.strip() for i in in_f]
 
 """Get to-do file prefixes."""

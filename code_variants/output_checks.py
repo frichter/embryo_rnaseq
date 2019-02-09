@@ -24,11 +24,17 @@ from var_call_class import bam_gatk
 """Global variables."""
 home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
 os.chdir(home_dir)
+with open(home_dir + 'metadata/fq_subdir_prefix_list.txt', 'r') as in_f:
+    all_f = [i.strip() for i in in_f]
 
 """Hisat2 output check."""
-hs_met_iter = glob.iglob(home_dir + 'FASTQ/*hisat2_metrics.txt')
+# hs_met_iter = glob.iglob(home_dir + 'FASTQ/*hisat2_metrics.txt')
 del_count, uniq_del_ct, tot_count = 0, 0, 0
-for hs_met in hs_met_iter:
+for f_i in all_f:
+    hs_met = f_i + '_hisat2_metrics.txt'
+    if not os.path.exists(hs_met):
+        print('no metrics for', f_i)
+        continue
     if os.stat(hs_met).st_size == 0:
         uniq_del_ct += 1
         hs_f_iter = glob.iglob(re.sub('_metrics.txt', '*', hs_met))
@@ -43,9 +49,9 @@ print(tot_count, uniq_del_ct, del_count)
 
 """STAR output check."""
 true_del = False  # set to True if actually deleting, keep as False if checking
-star_log_iter = glob.iglob(home_dir + 'FASTQ/*starLog.progress.out')
-del_count, uniq_del_ct, tot_count = 0, 0, 0
-for star_log in star_log_iter:
+del_count, uniq_del_ct, tot_count, done_ct = 0, 0, 0, 0
+for f_i in all_f:
+    star_log = f_i + '_starLog.progress.out'
     star_f_final = re.sub('progress.out', 'final.out', star_log)
     if not os.path.exists(star_f_final):
         star_f_iter = glob.iglob(re.sub('Log.progress.out', '*', star_log))
@@ -60,12 +66,12 @@ for star_log in star_log_iter:
                     os.remove(star_f)
             del_count += 1
         uniq_del_ct += 1
-    # else:
-    #     print(star_f_final)
+    else:
+        done_ct += 1
     tot_count += 1
 
 # number of files deleted:
-print(del_count, uniq_del_ct, tot_count)
+print(del_count, uniq_del_ct, done_ct, tot_count)
 
 """GATK output check.
 
@@ -80,8 +86,8 @@ then notify user and examine (and probably delete) the HISAT2 input
 Run extra HISAT2 alignments on interactive6
 """
 
-with open(home_dir + 'metadata/fq_prefix_list.txt', 'r') as in_f:
-    all_f = [i.strip() for i in in_f]
+# with open(home_dir + 'metadata/fq_subdir_prefix_list.txt', 'r') as in_f:
+#     all_f = [i.strip() for i in in_f]
 
 
 aligner = 'star'  # 'star' hisat2
@@ -91,6 +97,8 @@ todo_ct, del_ct, all_ct = 0, 0, 0
 for bam_name_i in all_f:
     bam_i = bam_gatk(bam_name_i, home_dir, aligner=aligner)
     # Only delete intermediate files if VCF was not completed
+    print(bam_i.vcf)
+    break
     if not os.path.exists(bam_i.vcf):
         print('todo:', bam_i.clean_sam)
         f_list = [bam_i.clean_sam, bam_i.sorted_bam, bam_i.dedup_bam,

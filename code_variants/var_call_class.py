@@ -39,10 +39,10 @@ class bam_gatk(object):
             raise ValueError("Invalid aligner. Expected {} but got {}".format(
                 aligner_types, self.aligner))
         self.prefix = file_prefix + '_' + aligner
-        self.id = re.sub('.*ASTQ/|.*trim_q20/', '', self.prefix)
+        rm_txt = '.*ASTQ/|.*trim_q20/|_' + self.aligner
+        # splitting in case file is in subdirectory w its own name
+        self.id = re.sub(rm_txt, '', self.prefix).split('/')[0]
         # if file is in sub-directory then get final ID including aligner name
-        if len(self.id.split('/')) > 1:
-            self.id = self.id.split('/')[1]
         # intermediate bams from the GATK steps
         self.init_file_names()
 
