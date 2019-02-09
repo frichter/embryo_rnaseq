@@ -224,4 +224,21 @@ class bam_gatk(object):
         else:
             print('already ran GATK VariantFiltration for', self.id)
 
+    def run_callable_loci_gatk(self):
+        """Run GATK3's callabaleloci command."""
+        self.callable_bed = self.prefix + '_callable.bed'
+        self.callable_sum = self.prefix + '_callable_tbl.txt'
+        if not os.path.exists(self.callable_bed):
+            cl_cmd = ('time java -Djava.io.tmpdir={} ' +
+                      '-jar $GATK_JAR -T CallableLoci -R {} ' +
+                      '-I {} -summary {} ' +
+                      '-o {}').format(
+                self.tmp_dir,
+                self.ref_fa,
+                self.bqsr_bam,
+                self.callable_sum,
+                self.callable_bed)
+            print(cl_cmd)
+            # subprocess.call(cl_cmd, shell=True)
+
 #

@@ -90,15 +90,13 @@ Run extra HISAT2 alignments on interactive6
 #     all_f = [i.strip() for i in in_f]
 
 
-aligner = 'star'  # 'star' hisat2
+aligner = 'hisat2'  # 'star' hisat2
 true_del = False  # set to True if actually deleting, keep as False if checking
 # bam_name_i = all_f[0]
 todo_ct, del_ct, all_ct = 0, 0, 0
 for bam_name_i in all_f:
     bam_i = bam_gatk(bam_name_i, home_dir, aligner=aligner)
     # Only delete intermediate files if VCF was not completed
-    print(bam_i.vcf)
-    break
     if not os.path.exists(bam_i.vcf):
         print('todo:', bam_i.clean_sam)
         f_list = [bam_i.clean_sam, bam_i.sorted_bam, bam_i.dedup_bam,
