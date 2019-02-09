@@ -3,7 +3,7 @@
 #BUSB -n 30
 #BSUB -R "rusage[mem=34000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_callable_star[1-2]"
+#BSUB -J "embryo_callable[3-81]"
 #BSUB -m manda
 #BSUB -o logs/%J_%I.stdout
 #BSUB -e logs/%J_%I.stderr
@@ -39,7 +39,7 @@ module load picard/2.7.1
 module load python/3.5.0 py_packages/3.5
 
 time python callable_regions.py --aligner "star" --bam $ID
-# time python callable_regions.py --aligner "hisat2" --bam $ID
+time python callable_regions.py --aligner "hisat2" --bam $ID
 
 
 ############ Minerva resources
