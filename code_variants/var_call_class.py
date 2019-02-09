@@ -239,6 +239,6 @@ class bam_gatk(object):
                 self.callable_sum,
                 self.callable_bed)
             print(cl_cmd)
-            # subprocess.call(cl_cmd, shell=True)
+            subprocess.call(cl_cmd, shell=True)
 
 #
