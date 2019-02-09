@@ -40,6 +40,9 @@ class bam_gatk(object):
                 aligner_types, self.aligner))
         self.prefix = file_prefix + '_' + aligner
         self.id = re.sub('.*ASTQ/|.*trim_q20/', '', self.prefix)
+        # if file is in sub-directory then get final ID including aligner name
+        if len(self.id.split('/')) > 1:
+            self.id = self.id.split('/')[1]
         # intermediate bams from the GATK steps
         self.init_file_names()
 
@@ -57,6 +60,10 @@ class bam_gatk(object):
         self.bqsr_bam = self.prefix + '_bqsr.bam'
         self.vcf_nofilter = self.prefix + '_gatk3_nofilter.vcf'
         self.vcf = self.prefix + '_gatk3.vcf'
+        # if file is in sub-directory but final VCF is in
+        # top level directory, then update final VCF to be top-level
+        if self.vcf.count(self.id) > 1:
+            self.vcf = re.sub('FASTQ/' + id, 'FASTQ', self.vcf)
 
     def clean_known_sites(self):
         """Delete the automatically made index for knownsites."""
@@ -174,8 +181,13 @@ class bam_gatk(object):
         else:
             print('already ran GATK BQSR for', self.id)
 
-    def run_gatk_hc(self):
+    def run_gatk_hc(self, gvcf=False):
         """Run GATK3 commands for variant calling."""
+        if gvcf:
+            gvcf_opt = '-ERC GVCF '
+            self.vcf_nofilter = re.sub('.vcf$', '.g.vcf', self.vcf_nofilter)
+        else:
+            gvcf_opt = ''
         if not os.path.exists(self.vcf_nofilter):
             # self.clean_known_sites()
             hc_cmd = ('time java -Djava.io.tmpdir={} ' +
@@ -184,11 +196,13 @@ class bam_gatk(object):
                       # dbsnp uses known sites for variant annotation:
                       '--dbsnp {} ' +
                       '-stand_call_conf 20.0 ' +
+                      '{}' +  # gVCF option
                       '-o {}').format(
                 self.tmp_dir,
                 self.ref_fa,
                 self.bqsr_bam,  # switch to self.bqsr_bam
                 self.ks_dbsnp,
+                gvcf_opt,
                 self.vcf_nofilter)
             print(hc_cmd)
             subprocess.call(hc_cmd, shell=True)
