@@ -63,7 +63,7 @@ class bam_gatk(object):
         # if file is in sub-directory but final VCF is in
         # top level directory, then update final VCF to be top-level
         if self.vcf.count(self.id) > 1:
-            self.vcf = re.sub('FASTQ/' + id, 'FASTQ', self.vcf)
+            self.vcf = re.sub('FASTQ/' + self.id, 'FASTQ', self.vcf)
 
     def clean_known_sites(self):
         """Delete the automatically made index for knownsites."""
