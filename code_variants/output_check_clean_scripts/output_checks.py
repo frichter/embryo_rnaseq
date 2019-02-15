@@ -90,7 +90,7 @@ Run extra HISAT2 alignments on interactive6
 #     all_f = [i.strip() for i in in_f]
 
 
-aligner = 'hisat2'  # 'star' hisat2
+aligner = 'star'  # 'star' hisat2
 true_del = False  # set to True if actually deleting, keep as False if checking
 # bam_name_i = all_f[0]
 todo_ct, del_ct, all_ct = 0, 0, 0

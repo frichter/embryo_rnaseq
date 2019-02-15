@@ -21,13 +21,13 @@ ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_
 
 time python var_call.py --aligner "hisat2" --bam $ID
 
-# running on interactive2
-ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_3_20_17_S31_L007"
+# running on interactive1
+ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/92182_C5_THS_011_E13_2_23_17_S31_L007"
 time python var_call.py --aligner "star" --bam $ID
 
-# next:
-ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/92182_C5_THS_011_E13_2_23_17_S31_L007"
-
+# crashes...
+ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/96134_C7_THS_030_BxE1_3_20_17_S31_L007"
+time python var_call.py --aligner "star" --bam $ID
 
 """
 

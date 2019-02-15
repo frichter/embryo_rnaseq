@@ -51,4 +51,10 @@ if __name__ == "__main__":
     done_msg = main()
     print(done_msg)
 
+"""Resources: GATK callableloci or mosdepth
+
+https://github.com/brentp/mosdepth
+https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_coverage_CallableLoci.php
+
+"""
 #

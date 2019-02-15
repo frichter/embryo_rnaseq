@@ -38,13 +38,16 @@ for bam_name_i in all_f:
     bam_i_hisat2 = bam_gatk(bam_name_i, home_dir, aligner='hisat2')
     star_done = os.path.exists(bam_i_star.vcf)
     hisat2_done = os.path.exists(bam_i_hisat2.vcf)
-    # if star_done and hisat2_done:
+    # if not star_done:
+    #     continue
+    # if not hisat2_done:
+    #     continue
     new_dir = re.sub('_star', '', bam_i_star.prefix)
     id = re.sub('.*ASTQ/|.*trim_q20/', '', new_dir)
     f_glob = glob.iglob(new_dir + '*')
     if not os.path.exists(new_dir):
         print('making', new_dir)
-        os.mkdir(new_dir)
+        # os.mkdir(new_dir)
     for f_i in f_glob:
         if f_i == new_dir:
             print(f_i)
@@ -62,7 +65,7 @@ for bam_name_i in all_f:
         # subprocess.call(mv_cmd, shell=True)
     both_done_ct += 1
 
-
+"""Fixing a mistake: moving the unfinished data back into top-level."""
 for bam_name_i in all_f:
     bam_i_star = bam_gatk(bam_name_i, home_dir, aligner='star')
     bam_i_hisat2 = bam_gatk(bam_name_i, home_dir, aligner='hisat2')
