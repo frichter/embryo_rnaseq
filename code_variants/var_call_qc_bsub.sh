@@ -3,7 +3,7 @@
 #BUSB -n 30
 #BSUB -R "rusage[mem=34000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_callable[3-81]"
+#BSUB -J "embryo_callable[26]"
 #BSUB -m manda
 #BSUB -o logs/%J_%I.stdout
 #BSUB -e logs/%J_%I.stderr
