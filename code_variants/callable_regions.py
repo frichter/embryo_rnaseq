@@ -56,5 +56,7 @@ if __name__ == "__main__":
 https://github.com/brentp/mosdepth
 https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_coverage_CallableLoci.php
 
+Function: filter for callable regions, pipe to new directory tree
+
 """
 #

@@ -54,15 +54,15 @@ for bam_name_i in all_f:
             print('skipping directory')
             continue
         if f_i == bam_i_hisat2.vcf:
-            # print(f_i)
+            # print('skipping', f_i)
             continue
         if f_i == bam_i_star.vcf:
-            # print(f_i)
+            # print('skipping', f_i)
             continue
         new_f_i = re.sub(id, id + '/' + id, f_i)
         mv_cmd = 'mv {} {}'.format(f_i, new_f_i)
         print(mv_cmd)
-        # subprocess.call(mv_cmd, shell=True)
+        subprocess.call(mv_cmd, shell=True)
     both_done_ct += 1
 
 """Fixing a mistake: moving the unfinished data back into top-level."""

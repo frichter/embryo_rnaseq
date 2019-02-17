@@ -3,7 +3,7 @@
 #BUSB -n 30
 #BSUB -R "rusage[mem=34000]"
 #BSUB -P acc_schade01a
-#BSUB -J "embryo_var_star_gatk[70]"
+#BSUB -J "embryo_var_star_gatk[26]"
 #BSUB -m manda
 #BSUB -o logs/%J_%I.stdout
 #BSUB -e logs/%J_%I.stderr
