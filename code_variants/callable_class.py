@@ -33,7 +33,7 @@ class call_loci(object):
             os.mkdir(self.subdir)
         # original input file (output from GATK callableloci)
         self.call_loci_ls = [
-            '{}/{}/{}_{}_callable.bed'.format(home_dir, id, id, i)
+            '{}FASTQ/{}/{}_{}_callable.bed'.format(home_dir, id, id, i)
             for i in self.aligner_ls]
         # intermediate files:
         self.call_only_ls = [
@@ -59,7 +59,7 @@ class call_loci(object):
 
     def subset_callable_loop(self):
         """Loop over the callable loci and subset."""
-        for i, j in self.call_loci_ls, self.call_only_ls:
+        for i, j in zip(self.call_loci_ls, self.call_only_ls):
             print(i, j)
             self.subset_callable_per_f(i, j)
 
