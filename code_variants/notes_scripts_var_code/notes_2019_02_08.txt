@@ -1,0 +1,17 @@
+# aggregate calls into a single VCF (either with joint genotyping or alone)
+# joint genotyping: GenotypeGVCFs
+# Compare VCF calls (possibly with the GATK tool)
+# Annotate with ANNOVAR (and/or other information)
+# Find input for PLINK (or something else?) 
+
+# Compare VCF outputs between STAR and HISAT2
+# Only consider PASS SNVs (no indels)
+# Any other constraints?
+
+# Possible methods are either
+# 1) bcftools
+https://samtools.github.io/bcftools/bcftools.html#stats
+https://samtools.github.io/bcftools/bcftools.html#plot-vcfstats
+# 2) GATK GenotypeConcordance
+https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadinstitute_gatk_tools_walkers_variantutils_GenotypeConcordance.php
+#

@@ -58,5 +58,46 @@ https://software.broadinstitute.org/gatk/documentation/tooldocs/3.8-0/org_broadi
 
 Function: filter for callable regions, pipe to new directory tree
 
+import os
+
+from var_call_class import bam_gatk
+from callable_class import call_loci
+
+home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
+os.chdir(home_dir)
+bam_f = ('/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/' +
+         '75888_C4_THS_014_BxE8_2_28_17_S18_L004/75888_C4_THS_014_BxE8_2_28_17_S18_L004')
+bam_i = bam_gatk(bam_f, home_dir, aligner=args.aligner)
+if not os.path.exists(bam_i.bqsr_bam):
+    return 'Final GATK BAM not ready ' + bam_i.bqsr_bam
+bam_i.run_callable_loci_gatk()
+bam_i.id
+
+call_i = call_loci(bam_i.id, home_dir)
+call_i.subset_callable_loop()
+call_i.intersect_callable()
+call_i.union_callable()
+known_dict = {'wgs_30x': home_dir + 'known_coverage/wgs_30x.bed'}
+for known_folder, known_f in known_dict.items():
+    call_i.intersect_w_known_loci(self, known_f, known_folder)
+
+
+# make ID subdirectory in home_dir + callable_comparison
+subdir = home_dir + 'callable_comparison/' + bam_i.id + '/'
+os.mkdir(subdir)
+def subset_callable(self, aligner):
+    \"""Create the callable region subset bed file for each aligner.\"""
+    in_loc = '{}/{}/{}_{}_callable.bed'.format(
+        home_dir, self.id, self.id, aligner)
+    out_loc = subdir + aligner + '_callable.bed'
+    if os.path.exists(out_loc):
+        return 'already created ' + out_loc
+    with open(in_loc, 'r') as in_f, open(out_loc, 'w') as out_f:
+        for line in in_f:
+            if 'CALLABLE' in line:
+                out_f.write(line)
+    return out_loc
+
+# for union, cat all 3 then merge
 """
 #
