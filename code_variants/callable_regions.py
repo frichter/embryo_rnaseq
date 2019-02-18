@@ -12,6 +12,7 @@ cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 module load gatk/3.6-0
 module load picard/2.7.1
 module load python/3.5.0 py_packages/3.5
+python
 
 EXAMPLE RUNS:
 ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004/75888_C4_THS_014_BxE8_2_28_17_S18_L004"
@@ -67,9 +68,9 @@ home_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/'
 os.chdir(home_dir)
 bam_f = ('/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/' +
          '75888_C4_THS_014_BxE8_2_28_17_S18_L004/75888_C4_THS_014_BxE8_2_28_17_S18_L004')
-bam_i = bam_gatk(bam_f, home_dir, aligner=args.aligner)
+bam_i = bam_gatk(bam_f, home_dir, aligner='hisat2')
 if not os.path.exists(bam_i.bqsr_bam):
-    return 'Final GATK BAM not ready ' + bam_i.bqsr_bam
+    print('Final GATK BAM not ready ' + bam_i.bqsr_bam)
 bam_i.run_callable_loci_gatk()
 bam_i.id
 

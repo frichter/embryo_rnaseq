@@ -61,7 +61,7 @@ class call_loci(object):
         """Loop over the callable loci and subset."""
         for i, j in self.call_loci_ls, self.call_only_ls:
             print(i, j)
-            self.subset_callable_per_f(self, i, j)
+            self.subset_callable_per_f(i, j)
 
     def intersect_callable(self):
         """Calculate intersection of callable loci.
