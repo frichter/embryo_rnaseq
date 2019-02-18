@@ -93,7 +93,7 @@ for known_folder, known_f in known_dict.items():
     print(known_f)
     call_i.intersect_w_known_loci(known_f, known_folder)
 
-for f, v in call_i.len_dict:
+for f, v in call_i.len_dict.items():
     print(f)
     f_len = 0
     with open(f, 'r') as in_f:
@@ -102,9 +102,9 @@ for f, v in call_i.len_dict:
             f_len += int(line_list[2]) - int(line_list[1])
     print(f_len)
     call_i.len_dict[f] = f_len
-    break
     # call_i.calc_bed_length(f)
-call_i.write_len_dict_to_f()
+
+# call_i.write_len_dict_to_f()
 
 """
 #

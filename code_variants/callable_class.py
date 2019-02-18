@@ -101,12 +101,12 @@ class call_loci(object):
         bed_known = BedTool(known_f)
         for k, v in self.callable_dict.items():
             out_f = '{}{}/{}.bed'.format(self.subdir, known_folder, k)
+            self.len_dict[out_f] = 0
             if os.path.exists(out_f):
                 continue
             bed_i = BedTool(v)
             bed_inter = bed_known.intersect(bed_i)
             bed_inter.saveas(out_f)
-            self.len_dict[out_f] = 0
 
 
 """ """
