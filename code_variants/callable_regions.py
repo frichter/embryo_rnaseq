@@ -81,27 +81,25 @@ call_i = call_loci(bam_i.id, home_dir)
 call_i.subset_callable_loop()
 call_i.intersect_callable()
 call_i.union_callable()
-known_dict = {'wgs_30x': home_dir + 'known_coverage/wgs_30x.bed'}
+['exon_locs_hg38.bed', 'clinvar_hg38_P_LP.bed',
+                'clinvar_hg38_P.bed']
+
+known_dict = {'clinvar_P': 'clinvar_hg38_P_sorted.bed',
+              'clinvar_P_LP': 'clinvar_hg38_P_LP_sorted.bed',
+              'exons': 'exon_locs_hg38_sorted.bed'}
+
 for known_folder, known_f in known_dict.items():
-    call_i.intersect_w_known_loci(self, known_f, known_folder)
+    known_dict[known_folder] = home_dir + 'known_region/' + known_f
 
+for known_folder, known_f in known_dict.items():
+    print(known_folder, known_f)
+    call_i.intersect_w_known_loci(known_f, known_folder)
+    break
 
-# make ID subdirectory in home_dir + callable_comparison
-subdir = home_dir + 'callable_comparison/' + bam_i.id + '/'
-os.mkdir(subdir)
-def subset_callable(self, aligner):
-    \"""Create the callable region subset bed file for each aligner.\"""
-    in_loc = '{}/{}/{}_{}_callable.bed'.format(
-        home_dir, self.id, self.id, aligner)
-    out_loc = subdir + aligner + '_callable.bed'
-    if os.path.exists(out_loc):
-        return 'already created ' + out_loc
-    with open(in_loc, 'r') as in_f, open(out_loc, 'w') as out_f:
-        for line in in_f:
-            if 'CALLABLE' in line:
-                out_f.write(line)
-    return out_loc
+for f in calc_length_list:
+    print(f)
+    call_i.calc_bed_length(f)
+call_i.write_len_dict_to_f()
 
-# for union, cat all 3 then merge
 """
 #
