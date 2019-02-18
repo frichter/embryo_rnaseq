@@ -44,7 +44,7 @@ class call_loci(object):
             self.call_inter, self.call_union]
         callable_fs = ['star', 'hisat2', 'intersect', 'union']
         self.callable_dict = dict(zip(callable_fs, self.callable_ls))
-        self.len_dict = {}
+        self.len_dict = dict(zip(self.callable_ls, [0]*len(self.callable_ls)))
         pybedtools.set_tempdir(home_dir + '/tmp_dir/')
 
     def subset_callable_per_f(self, call_loci, call_only):
@@ -95,7 +95,7 @@ class call_loci(object):
 
     def intersect_w_known_loci(self, known_f, known_folder):
         """Intersect with callable regions."""
-        print(known_f, known_folder)
+        # print(known_f, known_folder)
         if not os.path.exists(self.subdir + known_folder):
             os.mkdir(self.subdir + known_folder)
         bed_known = BedTool(known_f)
@@ -106,6 +106,7 @@ class call_loci(object):
             bed_i = BedTool(v)
             bed_inter = bed_known.intersect(bed_i)
             bed_inter.saveas(out_f)
+            self.len_dict[out_f] = 0
 
 
 """ """
