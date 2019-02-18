@@ -55,13 +55,14 @@ class call_loci(object):
             for line in in_f:
                 if 'CALLABLE' in line:
                     out_f.write(line)
-        return call_only
+        return call_only + ' done'
 
     def subset_callable_loop(self):
         """Loop over the callable loci and subset."""
         for i, j in zip(self.call_loci_ls, self.call_only_ls):
-            print(i, j)
-            self.subset_callable_per_f(i, j)
+            # print(i, j)
+            status = self.subset_callable_per_f(i, j)
+            print(status)
 
     def intersect_callable(self):
         """Calculate intersection of callable loci.
@@ -75,7 +76,7 @@ class call_loci(object):
         bed_a = BedTool(self.call_only_ls[0])
         # turn into for loop if using more aligners
         bed_b = BedTool(self.call_only_ls[1])
-        bed_inter = bed_a.intersect(bed_b, c=True)
+        bed_inter = bed_a.intersect(bed_b)
         # see if it needs to be merged. Don't think so but double check
         # bed_inter_merged = bed_inter.merge()
         bed_inter.saveas(self.call_inter)
@@ -84,14 +85,10 @@ class call_loci(object):
         """Get the union of callable loci."""
         if os.path.exists(self.call_union):
             return 'Union already done for ' + self.call_union
-        call_union_unsorted = re.sub('.bed', '_unsorted.bed', self.call_union)
-        cat_cmd = 'cat {} > {}'.format(
-            ' '.join([i for i in self.call_only_ls]), call_union_unsorted)
-        print(cat_cmd)
-        subprocess.call(cat_cmd, shell=True)
-        sort_cmd = 'sort -V -k1,1 -k2,2n {} > {}'.format(
-            call_union_unsorted, self.call_union)
-        subprocess.call(sort_cmd, shell=True)
+        cat_sort_cmd = 'cat {} | sort -V -k1,1 -k2,2n > {}'.format(
+            ' '.join([i for i in self.call_only_ls]), self.call_union)
+        print(cat_sort_cmd)
+        subprocess.call(cat_sort_cmd, shell=True)
         bed = BedTool(self.call_union)
         bed_merged = bed.merge()
         bed_merged.saveas(self.call_union)

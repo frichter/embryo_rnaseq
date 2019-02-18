@@ -11,6 +11,7 @@ Description: Identify regions with enough info for variant calling
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
 module load gatk/3.6-0
 module load picard/2.7.1
+module load bedtools/2.27.0 samtools/1.3 bcftools/1.6
 module load python/3.5.0 py_packages/3.5
 python
 
@@ -71,6 +72,8 @@ bam_f = ('/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/' +
 bam_i = bam_gatk(bam_f, home_dir, aligner='hisat2')
 if not os.path.exists(bam_i.bqsr_bam):
     print('Final GATK BAM not ready ' + bam_i.bqsr_bam)
+
+
 bam_i.run_callable_loci_gatk()
 bam_i.id
 
