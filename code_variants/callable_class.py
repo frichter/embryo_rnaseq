@@ -45,9 +45,7 @@ class call_loci(object):
             self.call_inter, self.call_union]
         callable_fs = ['star', 'hisat2', 'intersect', 'union']
         self.callable_dict = dict(zip(callable_fs, self.callable_ls))
-        if not os.path.exists(home_dir + 'pybedtools_temp_dir/'):
-            os.mkdir(home_dir + 'pybedtools_temp_dir/')
-        pybedtools.set_tempdir(home_dir + 'pybedtools_temp_dir/')
+        pybedtools.set_tempdir(home_dir + '/tmp_dir/')
 
     def subset_callable_per_f(self, call_loci, call_only):
         """Create the callable region subset bed file for each aligner."""
