@@ -93,6 +93,22 @@ for bed_loc in out_loc_list:
     bed_merge.saveas(bed_sorted_loc)
 
 
+"""
+cd /sc/orga/projects/chdiTrios/Felix/dbs/grch38_ens94/
+"""
+fa_dir = '/sc/orga/projects/chdiTrios/Felix/dbs/grch38_ens94/'
+fa_dict = fa_dir + 'Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai'
+in_dir = '/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/known_region/'
+fa_bed = in_dir + 'grch38_ens94.bed'
+chr_list = ['i' for i in range(23)] + ['X', 'Y']
+with open(fa_dict, 'r') as in_f, open(fa_bed, 'w') as out_f:
+    for line in in_f:
+        line_list = line.strip().split('\t')
+        if line_list[0] in chr_list:
+            out_line = '\t'.join([line_list[0], '0', line_list[1]]) + '\n'
+            _ = out_f.write(out_line)
+
+
 """Downloading known coverage tracks. THESE ARE NOT ACTUALLY AVAILABLE...
 
 UCSC > hg19 (not available for hg38) > Variation > Genome Coverage %

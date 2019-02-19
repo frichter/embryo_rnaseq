@@ -84,7 +84,8 @@ call_i.union_callable()
 
 known_dict = {'clinvar_P': 'clinvar_hg38_P_sorted.bed',
               'clinvar_P_LP': 'clinvar_hg38_P_LP_sorted.bed',
-              'exons': 'exon_locs_hg38_sorted.bed'}
+              'exons': 'exon_locs_hg38_sorted.bed',
+              'genome': 'grch38_ens94.bed'}
 
 for known_folder, known_f in known_dict.items():
     known_dict[known_folder] = home_dir + 'known_region/' + known_f
