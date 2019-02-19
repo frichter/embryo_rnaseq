@@ -19,6 +19,7 @@ EXAMPLE RUNS:
 ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004/75888_C4_THS_014_BxE8_2_28_17_S18_L004"
 time python callable_regions.py --aligner "star" --bam $ID
 time python callable_regions.py --aligner "hisat2" --bam $ID
+time python callable_regions.py --aligner "hisat2" --bam $ID --overlaps
 
 """
 
@@ -27,12 +28,15 @@ import os
 import argparse
 
 from var_call_class import bam_gatk
+from callable_class import call_loci
 
 
 def _get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--aligner', choices=["star", "hisat2"], default=None)
+    parser.add_argument('--aligner', choices=['star', 'hisat2'], default=None)
     parser.add_argument('--bam', type=str, help='BAM prefix')
+    parser.add_argument('--overlaps', default=False, action='store_true',
+                        help='Calculate overlaps')
     args = parser.parse_args()
     return args
 
@@ -45,6 +49,31 @@ def prepare_known_regions_files(home_dir):
                   'genome': 'grch38_ens94_sorted.bed'}
     for known_folder, known_f in known_dict.items():
         known_dict[known_folder] = home_dir + 'known_region/' + known_f
+    return known_dict
+
+
+def overlap_callable_loci(file_id, home_dir):
+    """Calculate overlaps/intersections/uions."""
+    call_i = call_loci(file_id, home_dir)
+    # check if input files exist
+    for f in call_i.call_loci_ls:
+        if not os.path.exists(f):
+            return f + ' not ready yet!'
+    # create intersections and unions of callable regions
+    call_i.subset_callable_loop()
+    call_i.intersect_callable()
+    call_i.union_callable()
+    # overlap with known regions
+    known_dict = prepare_known_regions_files(home_dir)
+    for known_folder, known_f in known_dict.items():
+        print(known_f)
+        call_i.intersect_w_known_loci(known_f, known_folder)
+    # calculate lengths
+    call_i.calc_all_bed_lengths()
+    # write length dictionary to summary file in top-level directory
+    # (as final output of this entire pipeline)
+    call_i.write_length_dict_to_file()
+    return 'Ovleraps/intersections final for ' + file_id
 
 
 def main():
@@ -56,7 +85,11 @@ def main():
     if not os.path.exists(bam_i.bqsr_bam):
         return 'Final GATK BAM not ready ' + bam_i.bqsr_bam
     bam_i.run_callable_loci_gatk()
-    return 'Callable loci done for ' + args.bam
+    if not args.overlaps:
+        return 'Callable loci done for ' + args.bam
+    else:
+        done_msg = overlap_callable_loci(bam_i.id, home_dir)
+        return done_msg
 
 
 if __name__ == "__main__":
@@ -93,6 +126,7 @@ call_i.subset_callable_loop()
 call_i.intersect_callable()
 call_i.union_callable()
 # overlap with known regions
+known_dict = prepare_known_regions_files(home_dir)
 for known_folder, known_f in known_dict.items():
     print(known_f)
     call_i.intersect_w_known_loci(known_f, known_folder)
@@ -100,11 +134,7 @@ for known_folder, known_f in known_dict.items():
 len_dict_i = call_i.calc_all_bed_lengths()
 # write length dictionary to summary file in top-level directory
 # (as final output of this entire pipeline)
-len_loc = call_i.subdir[:-1] + '_lengths.txt'
-with open(len_loc, 'w') as out_f:
-    for k, v in len_dict_i.items():
-        _ = out_f.write('\t'.join([k, v]) + '\n')
-
+call_i.write_length_dict_to_file()
 
 """
 #

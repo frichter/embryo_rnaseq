@@ -121,7 +121,16 @@ class call_loci(object):
                         f_len += int(line_list[2]) - int(line_list[1])
             # print(f_len)
             self.len_dict[f] = f_len
-        return self.len_dict
+        # return self.len_dict
+
+    def write_length_dict_to_file(self):
+        """Write lengths of all BED files to a final output file."""
+        len_loc = self.subdir[:-1] + '_lengths.txt'
+        with open(len_loc, 'w') as out_f:
+            for k, v in self.len_dict.items():
+                _ = out_f.write('\t'.join([k, str(v)]) + '\n')
+        return len_loc
+        print(_)
 
 
 """ """
