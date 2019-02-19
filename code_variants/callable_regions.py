@@ -9,11 +9,12 @@ felix.richter@icahn.mssm.edu
 Description: Identify regions with enough info for variant calling
 
 cd /sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/code_variants
+module purge
 module load gatk/3.6-0
 module load picard/2.7.1
-module load bedtools/2.27.0 samtools/1.3 bcftools/1.6
+module load bedtools/2.27.0
 module load python/3.5.0 py_packages/3.5
-python
+# python
 
 EXAMPLE RUNS:
 ID="/sc/orga/projects/chdiTrios/Felix/embryo_rnaseq/FASTQ/75888_C4_THS_014_BxE8_2_28_17_S18_L004/75888_C4_THS_014_BxE8_2_28_17_S18_L004"
@@ -69,11 +70,14 @@ def overlap_callable_loci(file_id, home_dir):
         print(known_f)
         call_i.intersect_w_known_loci(known_f, known_folder)
     # calculate lengths
+    # if not os.path.exists(call_i.len_loc):
     call_i.calc_all_bed_lengths()
     # write length dictionary to summary file in top-level directory
     # (as final output of this entire pipeline)
     call_i.write_length_dict_to_file()
     return 'Ovleraps/intersections final for ' + file_id
+    # else:
+    #     return 'Already completed overlaps for ' + file_id
 
 
 def main():

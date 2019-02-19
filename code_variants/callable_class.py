@@ -14,6 +14,7 @@ Description: Class/object with functions and attributes relevant to
 
 import subprocess
 import os
+import re
 
 
 import pybedtools
@@ -45,6 +46,7 @@ class call_loci(object):
         callable_fs = ['star', 'hisat2', 'intersect', 'union']
         self.callable_dict = dict(zip(callable_fs, self.callable_ls))
         self.len_dict = dict(zip(self.callable_ls, [0]*len(self.callable_ls)))
+        self.len_loc = self.subdir[:-1] + '_lengths.txt'
         pybedtools.set_tempdir(home_dir + '/tmp_dir/')
 
     def subset_callable_per_f(self, call_loci, call_only):
@@ -125,11 +127,11 @@ class call_loci(object):
 
     def write_length_dict_to_file(self):
         """Write lengths of all BED files to a final output file."""
-        len_loc = self.subdir[:-1] + '_lengths.txt'
-        with open(len_loc, 'w') as out_f:
+        with open(self.len_loc, 'w') as out_f:
             for k, v in self.len_dict.items():
-                _ = out_f.write('\t'.join([k, str(v)]) + '\n')
-        return len_loc
+                k_clean = re.sub('.*callable_comparison/', '', k)
+                _ = out_f.write('\t'.join([k_clean, str(v)]) + '\n')
+        return self.len_loc
         print(_)
 
 
