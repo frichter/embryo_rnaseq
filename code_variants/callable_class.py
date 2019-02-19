@@ -108,6 +108,21 @@ class call_loci(object):
             bed_inter = bed_known.intersect(bed_i)
             bed_inter.saveas(out_f)
 
+    def calc_all_bed_lengths(self):
+        """Calculate the length of every file in `len_dict`."""
+        chr_list = [str(i) for i in range(23)] + ['X', 'Y']
+        for f, v in self.len_dict.items():
+            # print(f)
+            f_len = 0
+            with open(f, 'r') as in_f:
+                for line in in_f:
+                    line_list = line.strip().split('\t')
+                    if line_list[0] in chr_list:
+                        f_len += int(line_list[2]) - int(line_list[1])
+            # print(f_len)
+            self.len_dict[f] = f_len
+        return self.len_dict
+
 
 """ """
 #

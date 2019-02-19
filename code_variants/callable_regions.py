@@ -37,6 +37,16 @@ def _get_args():
     return args
 
 
+def prepare_known_regions_files(home_dir):
+    """Prepare known regions files."""
+    known_dict = {'clinvar_P': 'clinvar_hg38_P_sorted.bed',
+                  'clinvar_P_LP': 'clinvar_hg38_P_LP_sorted.bed',
+                  'exons': 'exon_locs_hg38_sorted.bed',
+                  'genome': 'grch38_ens94_sorted.bed'}
+    for known_folder, known_f in known_dict.items():
+        known_dict[known_folder] = home_dir + 'known_region/' + known_f
+
+
 def main():
     """Run GATK."""
     args = _get_args()
@@ -77,35 +87,24 @@ if not os.path.exists(bam_i.bqsr_bam):
 bam_i.run_callable_loci_gatk()
 bam_i.id
 
+# create intersections and unions of callable regions
 call_i = call_loci(bam_i.id, home_dir)
 call_i.subset_callable_loop()
 call_i.intersect_callable()
 call_i.union_callable()
-
-known_dict = {'clinvar_P': 'clinvar_hg38_P_sorted.bed',
-              'clinvar_P_LP': 'clinvar_hg38_P_LP_sorted.bed',
-              'exons': 'exon_locs_hg38_sorted.bed',
-              'genome': 'grch38_ens94.bed'}
-
-for known_folder, known_f in known_dict.items():
-    known_dict[known_folder] = home_dir + 'known_region/' + known_f
-
+# overlap with known regions
 for known_folder, known_f in known_dict.items():
     print(known_f)
     call_i.intersect_w_known_loci(known_f, known_folder)
+# calculate lengths
+len_dict_i = call_i.calc_all_bed_lengths()
+# write length dictionary to summary file in top-level directory
+# (as final output of this entire pipeline)
+len_loc = call_i.subdir[:-1] + '_lengths.txt'
+with open(len_loc, 'w') as out_f:
+    for k, v in len_dict_i.items():
+        _ = out_f.write('\t'.join([k, v]) + '\n')
 
-for f, v in call_i.len_dict.items():
-    print(f)
-    f_len = 0
-    with open(f, 'r') as in_f:
-        for line in in_f:
-            line_list = line.strip().split('\t')
-            f_len += int(line_list[2]) - int(line_list[1])
-    print(f_len)
-    call_i.len_dict[f] = f_len
-    # call_i.calc_bed_length(f)
-
-# call_i.write_len_dict_to_f()
 
 """
 #
